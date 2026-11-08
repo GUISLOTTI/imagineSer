@@ -9,7 +9,7 @@ Quando passar de ~200 linhas, mover medições e lições antigas para `docs/arq
 | --- | --- | --- |
 | Claude | Créditos de uso extra desligados ✔ | — |
 | GitHub | Repositório privado `GUISLOTTI/imagineSer` ✔ | Confirmar que não há forma de pagamento; ajustes de Actions na Fase 1 |
-| Cloudflare | Conta e token pendentes; scripts T1/T2 prontos (07/11) | Gabriel cria o token (Workers AI + Account Analytics: Read) |
+| Cloudflare | Token com Workers AI + Account Analytics: Read ✔; T1 concluído (08/11) | Gabriel confirma que o plano é Free |
 | Buffer | Instagram e TikTok conectados ✔ | Confirmar tipo de conta e modo de publicação (Fase 3, pela API) |
 | YouTube | Conta criada; canal ainda sem @ | Conectar ao Buffer quando o @ liberar (previsto para 08/11) |
 | Google Cloud | Pendente | Na vez das vozes (exige cartão) |
@@ -34,8 +34,35 @@ YouTube: sem horários até o canal ser conectado.
 
 ## Medições
 
-Formato: data · o que · método · resultado · arquivo de dados. Nenhuma real ainda. Dados brutos da bancada:
-`bancada/resultados.csv` (por imagem) e `bancada/lotes.csv` (por lote). O modo `--simular` não gera medição.
+Formato: data · o que · método · resultado · arquivo de dados. Dados brutos da bancada: `bancada/resultados.csv`
+(por imagem) e `bancada/lotes.csv` (por lote). O modo `--simular` não gera medição.
+
+### 08/11/2026 (UTC) — T1, consumo real por imagem
+
+Método: lotes de 10 imagens por configuração, isolados no tempo; consumo lido pela API de analytics
+(`aiInferenceAdaptiveGroups`, `sum.totalNeurons`, separado por modelo). 61 imagens, 0 erros.
+
+| Config | Neurons/imagem | Imagens/dia (10.000) | s/imagem | Recebido | Bate com a tabela de preços |
+| --- | --- | --- | --- | --- | --- |
+| A — schnell, 4 passos | 172,8 | 57 | 2,3 | 1024×1024 | 4 *tiles* × (4,80 + 4 × 9,60) |
+| B — schnell, 8 passos | 326,4 | 30 | 2,1 | 1024×1024 | 4 *tiles* × (4,80 + 8 × 9,60) |
+| C — klein, 768×1344 | 104,2 | 95 | 9,6 | 768×1344 | 4 *tiles* × 26,05 |
+| D — klein + 1 referência | 107,1 | 93 | 4,9 | 768×1344 | C + 0,54 *tile* de entrada × 5,37 |
+| E — klein + 3 referências | 112,8 | 88 | 5,3 | 768×1344 | C + 3 × 0,54 × 5,37 |
+| F — klein, pedido 1080×1920 | 206,1 | 48 | 9,6 | **1072×1920** | 7,91 *tiles* (área pedida) × 26,05 |
+
+Conclusões medidas:
+- O analytics coincide com a fórmula oficial de preço até a casa decimal: as duas fontes concordam, então o T1 passa
+  sem o método do limite (que se mostrou impreciso, ver abaixo).
+- O schnell cobra os passos **por *tile***: o pior caso das estimativas do plano.
+- O klein cobra a saída pela área pedida (fracionada), com mínimo aparente de 4 *tiles* (C: 3,94 → 4), e as
+  referências pela área fracionada de entrada. Ele arredonda a largura para múltiplo de 16 (1080 → 1072).
+- **O corte da franquia não é exato:** o dia fechou em 10.570,6 neurons sem nenhum erro 3036. O nosso contador
+  (8.000/dia na produção) é o teto real; o 3036 é só a rede de segurança.
+- Custo por episódio, supondo ~30 imagens (cenas, ficha do personagem, fundos e regerações): C ≈ 3.100 neurons
+  (0,3 dia de franquia); F ≈ 6.200 (0,6); A ≈ 5.200 (0,5); B ≈ 9.800 (1,0). Qualidade ainda não avaliada (T2).
+- Observação qualitativa (1 amostra, sem decisão): o D manteve o mesmo personagem da referência e trocou só o
+  cenário, mas copiou também a pose. O T3 mede isso.
 
 ## Lições
 
@@ -46,3 +73,5 @@ Formato: data · o que · método · resultado · arquivo de dados. Nenhuma real
 | 07/11/2026 | Guias de terceiros sobre monetização divergem entre si; só decidir com página oficial ou medição | Pesquisa de monetização | ADR-0015 |
 | 07/11/2026 | Exemplo de código da doc pode contradizer o esquema (o curl do schnell manda `seed`, que o esquema proíbe); vale o `schema-input.json` | Scripts da bancada | `docs/05` |
 | 07/11/2026 | No Windows, stdout e stderr do Python não são UTF-8 por padrão; scripts reconfiguram os dois | Teste do `bancada.py` | `bancada/bancada.py` |
+| 08/11/2026 | A trava de intervalo entre lotes pulou o lote A logo após o `testar`; o loop seguiu sem avisar no fim | T1 | Rodar o pulado no final; checar `lotes.csv` ao fim de cada rodada |
+| 08/11/2026 | A franquia gratuita não corta exatamente em 10.000 (passou para 10.570 sem 3036); não usar o 3036 como medida | T1 | `docs/05` (T1) |
