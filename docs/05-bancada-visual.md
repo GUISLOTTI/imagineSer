@@ -76,6 +76,8 @@ Definição exata em `bancada/configs.json`; prompts em `bancada/prompts.json`; 
   (escala 1–2% em onda), troca de pose por corte, partículas por script, legenda palavra a palavra.
 - Renderizar num runner do GitHub (ubuntu-latest) e medir o tempo.
 - **Passa:** "parece animação 3D estilizada leve" em ≥ 4 de 5 planos, avaliado no celular; render < 10 min.
+- Script: `bancada/t4_movimento.py` (`--rascunho` para iterar em 540×960). v1 em 08/11/2026: pipeline ok, mas o
+  fundo "inventado" atrás do personagem mancha em cenário detalhado; a v2 usa cenários gerados sem o personagem.
 
 ### T5 — Formato vertical
 - Comparar recorte do quadrado + ampliação local vs. saída vertical nativa (se o klein aceitar tamanho).

@@ -19,3 +19,5 @@ paths:
 - Avaliação às cegas: o script embaralha e renomeia os arquivos antes de o Gabriel dar nota; a chave de
   correspondência fica num arquivo separado, que só é aberto depois das notas.
 - Nada vai para o Gabriel sem ter rodado de verdade pelo menos uma vez.
+- Vídeo: antes de mandar, extrair uma folha de quadros (início, meio, fim de cada plano e transições) e conferir
+  recorte, legenda e artefatos. Defeito conhecido não vai para avaliação.

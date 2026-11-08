@@ -9,7 +9,7 @@ Quando passar de ~200 linhas, mover medições e lições antigas para `docs/arq
 | --- | --- | --- |
 | Claude | Créditos de uso extra desligados ✔ | — |
 | GitHub | Repositório privado `GUISLOTTI/imagineSer` ✔ | Confirmar que não há forma de pagamento; ajustes de Actions na Fase 1 |
-| Cloudflare | Token com Workers AI + Account Analytics: Read ✔; T1 concluído (08/11) | Gabriel confirma que o plano é Free |
+| Cloudflare | Plano **Free** confirmado pelo Gabriel (08/11; o painel avisa quando os 10 mil do dia acabam) ✔; token com Workers AI + Account Analytics: Read ✔ | — |
 | Buffer | Instagram e TikTok conectados ✔ | Confirmar tipo de conta e modo de publicação (Fase 3, pela API) |
 | YouTube | Conta criada; canal ainda sem @ | Conectar ao Buffer quando o @ liberar (previsto para 08/11) |
 | Google Cloud | Pendente | Na vez das vozes (exige cartão) |
@@ -64,6 +64,19 @@ Conclusões medidas:
 - Observação qualitativa (1 amostra, sem decisão): o D manteve o mesmo personagem da referência e trocou só o
   cenário, mas copiou também a pose. O T3 mede isso.
 
+### 08/11/2026 — T4 v1 (movimento), sem gastar franquia
+
+Método: `bancada/t4_movimento.py`, 5 planos de 4 s com as imagens do T1 (C-01 e D-01/04/07/10), recorte com rembg
+(`isnet-general-use`), paralaxe em 2 camadas, respiração, pulso, foco, bolhas, vinheta, legenda palavra a palavra
+(Lilita One, OFL) e pan rápido. Render neste PC: **155 s para 20 s em 1080×1920 a 30 fps** (23 s de preparo).
+Episódio de 60–75 s ≈ 8–10 min neste PC; falta medir no runner do GitHub (critério: < 10 min para o clipe de 20 s).
+
+Resultado: o pipeline funciona, mas **não vai para avaliação**:
+- Preencher o buraco do personagem com desfoque gera mancha visível em fundo detalhado (recife), e aumentar a máscara
+  só alarga a mancha. Próxima versão: cenário gerado sem o personagem + recorte por cima (método c do T3).
+- As 4 imagens D vistas têm **a mesma pose** da referência: a troca de pose depende do T3.
+- Legenda a 62% da altura cobria o personagem; a 72% fica legível e livre do rosto.
+
 ## Lições
 
 | Data | Lição | Origem | Virou regra em |
@@ -75,3 +88,5 @@ Conclusões medidas:
 | 07/11/2026 | No Windows, stdout e stderr do Python não são UTF-8 por padrão; scripts reconfiguram os dois | Teste do `bancada.py` | `bancada/bancada.py` |
 | 08/11/2026 | A trava de intervalo entre lotes pulou o lote A logo após o `testar`; o loop seguiu sem avisar no fim | T1 | Rodar o pulado no final; checar `lotes.csv` ao fim de cada rodada |
 | 08/11/2026 | A franquia gratuita não corta exatamente em 10.000 (passou para 10.570 sem 3036); não usar o 3036 como medida | T1 | `docs/05` (T1) |
+| 08/11/2026 | Paralaxe não funciona "inventando" o fundo atrás do personagem; precisa de cenário gerado sem ele | T4 v1 | `docs/05` (T3c e T4) |
+| 08/11/2026 | Conferir uma folha de quadros antes de mandar vídeo ao Gabriel pegou dois defeitos; vira passo fixo | T4 v1 | `.claude/rules/bancada.md` |

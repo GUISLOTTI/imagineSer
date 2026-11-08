@@ -8,7 +8,7 @@ Detalhes e fontes: `docs/01-plano-mvp-v2.md`, seção 6.
 - [ ] GitHub: **nenhuma** forma de pagamento cadastrada (o Actions bloqueia ao esgotar a franquia, sem cobrar).
 - [ ] GitHub: "Allow GitHub Actions to create and approve pull requests" ligado (necessário para os PRs do bot).
 - [ ] GitHub: variáveis de repositório `OWNER_LOGIN` (seu login) e `PUBLICACAO_ATIVA=false` até a Fase 3.
-- [ ] Cloudflare: plano **Workers Free**; token de API só com Workers AI.
+- [x] Cloudflare: plano **Workers Free** (confirmado em 08/11/2026); token só com Workers AI + Account Analytics: Read.
 - [ ] Cloudflare R2 (Fase 2): regras de ciclo de vida (intermediários 14 dias, masters 90 dias); chaves por bucket e
       por papel.
 - [ ] Google Cloud (na vez da voz): projeto só para TTS; só a API Text-to-Speech ativa; orçamento de US$ 1 com
