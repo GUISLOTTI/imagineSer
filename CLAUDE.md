@@ -1,4 +1,4 @@
-# Imagine Ser — fábrica de conteúdo (MVP)
+# Imagine Ser
 
 Vídeos curtos e originais de curiosidades (animais, corpo humano, natureza, ciência, universo, evolução, fenômenos),
 narrados por voz sintética em pt-BR, publicados em YouTube Shorts, Instagram Reels e TikTok (@imagineser.oficial).
@@ -68,6 +68,23 @@ Fase atual: **Semana 0 — transplante e bancada de testes**. Nenhum código de 
 - Antes de afirmar preço, limite ou recurso de serviço externo, verifique a documentação oficial atual e cite.
 - Pronto = compila, testes passam, docs atualizados, nenhum limite ou regra acima violado.
 
+## Como evoluímos (contexto e melhoria contínua)
+
+- **Medir antes de decidir (ADR-0015):** escolher entre ferramentas, modelos, vozes, técnicas, durações ou horários
+  exige teste real registrado em `docs/08` (data, método, números). Validado = doc oficial citada com data ou
+  medição nossa; guia de terceiros só gera hipótese. Sem isso, o ADR fica "Proposta".
+- **O estado mora nos arquivos, não na conversa:** ao fim de cada tarefa, atualize "Próximos passos" abaixo e
+  `docs/08` (estado, medições, lições) e faça um commit pequeno e verificado (`feat:`, `fix:`, `docs:`, `chore:`).
+  Uma sessão nova deve conseguir continuar só lendo este arquivo.
+- **Contexto enxuto:** este arquivo fica abaixo de 150 linhas, só com o que vale sempre; detalhes vão para `docs/`
+  e `.claude/rules/`. Leia a seção que precisa, não o doc inteiro. Sessão longa ou troca de assunto: `/compact`
+  com foco, ou sessão nova.
+- **Erro vira lição, lição repetida vira regra:** todo bug, negativa ou ajuste pedido pelo Gabriel entra em
+  `docs/08` com causa e correção; o que se repetir vira regra na skill afetada ou aqui. O mesmo erro não chega duas
+  vezes ao Gabriel. Na Fase 1, os motivos das negativas nos PRs passam a alimentar as skills automaticamente.
+- **Só se entrega o que rodou:** script, skill ou workflow só vai para o Gabriel depois de executado de verdade.
+- **Ao fechar uma fase:** revise este arquivo e os docs e corte o que ficou obsoleto.
+
 ## Mapa dos documentos (leia sob demanda)
 
 - `docs/01-plano-mvp-v2.md` — plano vigente: decisões, bancada visual, produção, voz, plataformas, segurança,
@@ -80,12 +97,15 @@ Fase atual: **Semana 0 — transplante e bancada de testes**. Nenhum código de 
 - `docs/05-bancada-visual.md` — protocolo dos testes T1–T5 de imagem.
 - `docs/06-seguranca.md` — portão de aprovação, idempotência, recuperação, segredos, checklist de contas.
 - `docs/07-fontes.md` — onde estão as fontes e quando reverificar.
+- `docs/08-estado-e-aprendizados.md` — estado das contas, medições reais e lições. **Leia no início da sessão.**
 
 ## Próximos passos (Semana 0 → Fase 0)
 
-1. Gabriel: criar o repositório privado e vazio `imagineser-fabrica`; Claude faz o primeiro commit e o push.
-2. Gabriel: checklist de contas de `docs/06-seguranca.md` (Claude, GitHub, Cloudflare, Buffer; Google só na voz).
-3. Claude: bancada visual T1–T5 (`docs/05-bancada-visual.md`) com scripts Python em `bancada/`; depois 5 vozes
-   Chirp 3 HD para o Gabriel ouvir.
+Repositório: `github.com/GUISLOTTI/imagineSer` (privado). Estado das contas em `docs/08`.
+
+1. Claude: scripts da bancada visual T1–T5 (`docs/05-bancada-visual.md`) em `bancada/`. Gabriel: token da
+   Cloudflare no `.env` quando o Claude cobrar (scripts prontos).
+2. Gabriel: conectar o YouTube ao Buffer quando o canal tiver o @ (Claude lembra).
+3. Claude: 5 vozes Chirp 3 HD para o Gabriel ouvir (aí entra o Google Cloud, com cartão).
 4. Claude: um episódio feito à mão com rascunhos das skills (calibra prompts); Gabriel aprova ou nega.
-5. ADRs de imagem e voz → Fase 1: solução .NET, schemas e skills definitivas (ordem em `docs/01`, seção 10).
+5. ADRs de imagem e voz com números medidos → Fase 1: solução .NET, schemas e skills definitivas (`docs/01` §10).

@@ -1,5 +1,7 @@
 # Prompt para a primeira sessão no terminal
 
+> Concluída em 07/11/2026. Não reexecutar: o estado atual está em `CLAUDE.md` e `docs/08-estado-e-aprendizados.md`.
+
 Abra o terminal na raiz do repositório, rode `claude`, confira com `/context` que o `CLAUDE.md` aparece em
 "Memory files" e cole o texto abaixo.
 

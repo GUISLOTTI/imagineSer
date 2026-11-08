@@ -26,3 +26,8 @@ TestResults/
 !assets-marca/**
 bancada/saida/
 tmp/
+
+# Python (bancada e auxiliares de mídia)
+.venv/
+__pycache__/
+*.pyc

@@ -64,7 +64,7 @@ docs/07-fontes.md
 
 **Como fazer o transplante:**
 
-1. Crie um repositório privado no GitHub (sugestão: `imaginaser-fabrica`) e clone no seu PC.
+1. Crie um repositório privado no GitHub (sugestão: `imagineSer`) e clone no seu PC.
 2. Descompacte o kit na raiz e faça o primeiro commit (`chore: contexto inicial`).
 3. Abra o terminal na raiz e rode `claude`. Confirme com `/context` que o `CLAUDE.md` aparece em *Memory files*.
 4. Cole o conteúdo de `PRIMEIRA-SESSAO.md`. Ele pede ao Claude que leia os docs, devolva um resumo com dúvidas e proponha o plano da Fase 0, **sem escrever código**.
@@ -320,7 +320,7 @@ O `reconciliar` roda às 07h, 15h e 23h todos os dias. O horário de publicaçã
 **Estrutura do repositório:**
 
 ```text
-imaginaser-fabrica/
+imagineSer/
 ├─ CLAUDE.md  ·  PRIMEIRA-SESSAO.md  ·  README.md  ·  .gitignore
 ├─ .claude/
 │  ├─ settings.json            permissões + hook
@@ -383,7 +383,7 @@ No workflow, o `checar-fatos` roda numa invocação separada do `roteirizar`, pa
 Para cada uma, a premissa adotada até você decidir.
 
 - [x] **Marca:** "Imagine Ser" / @imagineser.oficial (contas já existem).
-- [x] **Repositório:** privado (ADR-0002), nome `imagineser-fabrica`.
+- [x] **Repositório:** privado (ADR-0002), `github.com/GUISLOTTI/imagineSer`.
 - [ ] **Cartão no R2 e no Google Cloud:** *premissa: sim.* Google na vez da voz (Fase 0); R2 só na Fase 2.
 - [ ] **Conferir agora:** créditos de uso extra do Claude desligados; nenhuma forma de pagamento no GitHub; Cloudflare no plano Workers Free.
 - [ ] **Tipo de conta:** Instagram profissional (Business ou Creator)? TikTok pessoal ou Business? Confirmar ao conectar no Buffer.

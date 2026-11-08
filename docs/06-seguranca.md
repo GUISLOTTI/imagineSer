@@ -4,7 +4,7 @@ Detalhes e fontes: `docs/01-plano-mvp-v2.md`, seção 6.
 
 ## Checklist de contas (fazer na Semana 0, sem cobrança possível)
 
-- [ ] Claude: créditos de uso extra **desligados** (claude.ai/settings/usage).
+- [x] Claude: créditos de uso extra **desligados** (claude.ai/settings/usage). Conferido em 07/11/2026.
 - [ ] GitHub: **nenhuma** forma de pagamento cadastrada (o Actions bloqueia ao esgotar a franquia, sem cobrar).
 - [ ] GitHub: "Allow GitHub Actions to create and approve pull requests" ligado (necessário para os PRs do bot).
 - [ ] GitHub: variáveis de repositório `OWNER_LOGIN` (seu login) e `PUBLICACAO_ATIVA=false` até a Fase 3.

@@ -1,4 +1,4 @@
-# imagineser-fabrica
+# Imagine Ser
 
 Pipeline do Imagine Ser: vídeos curtos de curiosidades com IA, aprovação humana em duas etapas e publicação em
 YouTube, Instagram e TikTok.

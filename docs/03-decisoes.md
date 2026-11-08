@@ -83,7 +83,8 @@ consequências. Para mudar uma decisão aceita, crie um ADR novo que a substitua
   - Aprovar = seguir. Pedir mudanças com comentário = o Claude ajusta no mesmo PR. Fechar sem merge = descartar; o
     próximo tema vira roteiro automaticamente.
   - Roteiro aprovado → `produzir` → PR de vídeo. Vídeo aprovado → `publicar` agenda no próximo horário livre (ter,
-    qui, sáb; 12h e 19h alternados nas 4 primeiras semanas).
+    qui, sáb, nos horários que o Buffer sugeriu para cada rede; ver `docs/08`). Os horários são ponto de partida e
+    serão comparados após 4 semanas (ADR-0015).
   - Não há prazo. Horário sem vídeo aprovado fica vazio; nada é publicado sem as duas aprovações.
   - Meta: uma ação por PR, pelo app do GitHub no celular.
 - **Consequências:** o workflow `pauta-semanal` deixa de existir (6 workflows). O fluxo exato aprovar → mesclar e a
@@ -91,15 +92,18 @@ consequências. Para mudar uma decisão aceita, crie um ADR novo que a substitua
 
 ## ADR-0012 — Duração acima de 1 minuto
 - **Data:** 2026-11-07 · **Status:** Aceita · Substitui o ADR-0007.
-- **Contexto:** o objetivo é receita. Segundo guias de terceiros consultados em 07/11/2026 (a página oficial do
-  TikTok não carregou; confirmar no TikTok Studio), o Creator Rewards do TikTok só conta vídeos de mais de 1 minuto,
-  exige 10 mil seguidores e 100 mil visualizações em 30 dias, e o Brasil aparece na lista de países. Os Shorts entram
-  no YPP com 1.000 inscritos e 10 milhões de visualizações válidas em 90 dias
+- **Contexto:** o objetivo é receita. O Creator Rewards do TikTok recompensa "high-quality, original content that
+  is over a minute long" e exige 18 anos, "at least 10K followers with a minimum of 100K views in the last 30 days" e
+  "a personal account in good standing where the program is available"
+  ([TikTok Newsroom, 18/03/2024](https://newsroom.tiktok.com/introducing-the-new-creator-rewards-program?lang=en),
+  lido em 07/11/2026). Se o Brasil está incluído só aparece em guias de terceiros: confirmar no TikTok Studio. Os
+  Shorts entram no YPP com 1.000 inscritos e 10 milhões de visualizações válidas em 90 dias
   ([YouTube](https://support.google.com/youtube/answer/72851)). O briefing original já preferia 60–90 s.
 - **Decisão:** padrão 61–90 s, alvo 62–75 s. Abaixo de 61 s só como exceção justificada no PR de roteiro; teto
   absoluto de 120 s, validado por código.
 - **Consequências:** cerca de 10–12 imagens únicas por episódio em vez de 8–10; o T1 confirma se cabe em ≤ 1,2 dia
-  de franquia. Continua valendo comparar a retenção por faixa de duração após 4 semanas.
+  de franquia. O alvo 62–75 s é hipótese: comparar a retenção por faixa de duração após 4 semanas. A conta do TikTok
+  continua **pessoal** (conta Business não entra no programa).
 
 ## ADR-0013 — Simplificações e ajustes operacionais
 - **Data:** 2026-11-07 · **Status:** Aceita · Altera trechos de `docs/01` (§4, §6, §7, §9, §10).
@@ -129,3 +133,32 @@ consequências. Para mudar uma decisão aceita, crie um ADR novo que a substitua
   conferida antes de adotar (`docs/05`).
 - **Consequências:** o runner instala Python e dependências (com cache, para poupar minutos). Se o Chirp 3 HD devolver
   o tempo das palavras, o alinhamento forçado nem entra (a confirmar na Fase 0).
+
+## ADR-0015 — Medir antes de decidir
+- **Data:** 2026-11-07 · **Status:** Aceita
+- **Contexto:** o Gabriel pediu que nenhuma ferramenta ou abordagem seja escolhida sobre outra sem teste real, salvo
+  informação validada.
+- **Decisão:** escolher entre ferramentas, modelos, vozes, técnicas, durações, formatos ou horários exige teste real,
+  com método e números registrados em `docs/08`. "Validada" = documentação oficial do fornecedor ou da plataforma,
+  citada com data, ou medição nossa. Guia de terceiros serve para formular hipótese, nunca para decidir. Sem
+  validação, o ADR fica "Proposta".
+- **Situação dos ADRs em vigor:**
+  - 0005 (modelo de imagem): Proposta até os testes T1–T5.
+  - 0006 (Chirp 3 HD): a franquia e a licença estão na documentação oficial; a voz específica sai do teste de 5 vozes.
+  - 0012 (duração): a regra de mais de 1 minuto está validada na fonte oficial; o alvo de 62–75 s é hipótese a medir.
+  - 0014 (Python): aceito para a bancada; cada uso na produção (recorte, alinhamento, ampliação) só entra depois de
+    medido contra a alternativa (ex.: tempos de palavra do próprio Chirp).
+  - Horários de publicação: os sugeridos pelo Buffer são ponto de partida, não decisão.
+
+## ADR-0016 — Vídeo longo no YouTube
+- **Data:** 2026-11-07 · **Status:** Proposta (avaliar na Fase 4, com medição)
+- **Contexto:** o Gabriel quer avaliar vídeos longos além dos Shorts. O YPP tem dois caminhos: 10 milhões de
+  visualizações de Shorts em 90 dias ou 4.000 horas de exibição pública de vídeos longos em 12 meses
+  ([YouTube](https://support.google.com/youtube/answer/72851)). O Buffer só publica Shorts no YouTube, não vídeo longo
+  ([Buffer](https://support.buffer.com/article/562-using-youtube-shorts-with-buffer)).
+- **Proposta:** depois que o pipeline de Shorts estiver estável, publicar vídeo longo pela YouTube Data API direta
+  (oficial e gratuita; já é o plano B da Fase 4). Antes de decidir, um teste mede neurons por minuto de vídeo,
+  minutos de render, consumo do Pro e tempo de revisão do Gabriel. Hipóteses a testar: (a) vídeo original em 16:9 de
+  5–10 min; (b) compilação temática dos próprios Shorts com narração de ligação (reaproveita imagens; conferir antes
+  a política de conteúdo reutilizado e inautêntico do YouTube).
+- **Consequências:** nada muda no MVP.
