@@ -53,7 +53,7 @@ Definição exata em `bancada/configs.json`; prompts em `bancada/prompts.json`; 
 3. Por imagem, `bancada/resultados.csv`: config, modelo, passos, tamanho pedido e recebido, referências, seed, tempo,
    tentativas, erro. Por lote, `bancada/lotes.csv`: janela, imagens, neurons pelo analytics e pelo limite.
 - **Passa:** os dois métodos diferem no máximo 10%.
-- **Resultado (08/11/2026): passou.** O analytics coincidiu com a fórmula oficial de preço em todas as configurações,
+- **Resultado (07/11/2026): passou.** O analytics coincidiu com a fórmula oficial de preço em todas as configurações,
   e o método do limite foi descartado: o dia passou de 10.000 (10.570) sem erro 3036, então o corte não serve de
   régua. Números em `docs/08`.
 
@@ -76,7 +76,7 @@ Definição exata em `bancada/configs.json`; prompts em `bancada/prompts.json`; 
   (escala 1–2% em onda), troca de pose por corte, partículas por script, legenda palavra a palavra.
 - Renderizar num runner do GitHub (ubuntu-latest) e medir o tempo.
 - **Passa:** "parece animação 3D estilizada leve" em ≥ 4 de 5 planos, avaliado no celular; render < 10 min.
-- Script: `bancada/t4_movimento.py` (`--rascunho` para iterar em 540×960). v1 em 08/11/2026: pipeline ok, mas o
+- Script: `bancada/t4_movimento.py` (`--rascunho` para iterar em 540×960). v1 em 07/11/2026: pipeline ok, mas o
   fundo "inventado" atrás do personagem mancha em cenário detalhado; a v2 usa cenários gerados sem o personagem.
 
 ### T5 — Formato vertical

@@ -66,6 +66,8 @@ Fase atual: **Semana 0 — transplante e bancada de testes**. Nenhum código de 
 - Conflito entre docs: resolva pela opção mais simples e segura e registre num ADR; pergunte só nos casos acima.
 - Decisão nova ou mudança de decisão → registre em `docs/03-decisoes.md` (ADR). Regra permanente → uma linha aqui.
 - Antes de afirmar preço, limite ou recurso de serviço externo, verifique a documentação oficial atual e cite.
+- **Horários:** sempre em Brasília (UTC−3), com dia da semana e data; confira com `date` antes. Docs usam Brasília;
+  CSVs e logs usam UTC. A franquia do Workers AI renova às 00:00 UTC = 21:00 de Brasília.
 - Pronto = compila, testes passam, docs atualizados, nenhum limite ou regra acima violado.
 
 ## Como evoluímos (contexto e melhoria contínua)
@@ -103,8 +105,9 @@ Fase atual: **Semana 0 — transplante e bancada de testes**. Nenhum código de 
 
 Repositório: `github.com/GUISLOTTI/imagineSer` (privado). Estado das contas em `docs/08`.
 
-1. Bancada visual (`docs/05-bancada-visual.md`): T1 concluído em 08/11 (números em `docs/08`). Próximo: T2 depois
-   das 00:00 UTC de 09/11 (21:00 de 08/11 em Brasília), página de avaliação às cegas para o Gabriel; depois T3–T5.
+1. Bancada visual (`docs/05-bancada-visual.md`): T1 concluído no sábado 07/11 à noite (números em `docs/08`).
+   Próximo: T2 a partir de domingo 08/11 às 21:00 (Brasília), quando a franquia renova; depois a página de avaliação
+   às cegas para o Gabriel; depois T3 e T4 v2 (cenários sem o personagem), T5.
 2. Gabriel: conectar o YouTube ao Buffer quando o canal tiver o @ (Claude lembra).
 3. Claude: 5 vozes Chirp 3 HD para o Gabriel ouvir (aí entra o Google Cloud, com cartão).
 4. Claude: um episódio feito à mão com rascunhos das skills (calibra prompts); Gabriel aprova ou nega.

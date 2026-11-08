@@ -9,7 +9,7 @@ Quando passar de ~200 linhas, mover medições e lições antigas para `docs/arq
 | --- | --- | --- |
 | Claude | Créditos de uso extra desligados ✔ | — |
 | GitHub | Repositório privado `GUISLOTTI/imagineSer` ✔ | Confirmar que não há forma de pagamento; ajustes de Actions na Fase 1 |
-| Cloudflare | Plano **Free** confirmado pelo Gabriel (08/11; o painel avisa quando os 10 mil do dia acabam) ✔; token com Workers AI + Account Analytics: Read ✔ | — |
+| Cloudflare | Plano **Free** confirmado pelo Gabriel (07/11; o painel avisa quando os 10 mil do dia acabam) ✔; token com Workers AI + Account Analytics: Read ✔ | — |
 | Buffer | Instagram e TikTok conectados ✔ | Confirmar tipo de conta e modo de publicação (Fase 3, pela API) |
 | YouTube | Conta criada; canal ainda sem @ | Conectar ao Buffer quando o @ liberar (previsto para 08/11) |
 | Google Cloud | Pendente | Na vez das vozes (exige cartão) |
@@ -37,7 +37,7 @@ YouTube: sem horários até o canal ser conectado.
 Formato: data · o que · método · resultado · arquivo de dados. Dados brutos da bancada: `bancada/resultados.csv`
 (por imagem) e `bancada/lotes.csv` (por lote). O modo `--simular` não gera medição.
 
-### 08/11/2026 (UTC) — T1, consumo real por imagem
+### 07/11/2026, sábado, 23:01–23:21 (Brasília) — T1, consumo real por imagem
 
 Método: lotes de 10 imagens por configuração, isolados no tempo; consumo lido pela API de analytics
 (`aiInferenceAdaptiveGroups`, `sum.totalNeurons`, separado por modelo). 61 imagens, 0 erros.
@@ -64,7 +64,7 @@ Conclusões medidas:
 - Observação qualitativa (1 amostra, sem decisão): o D manteve o mesmo personagem da referência e trocou só o
   cenário, mas copiou também a pose. O T3 mede isso.
 
-### 08/11/2026 — T4 v1 (movimento), sem gastar franquia
+### 07/11/2026, sábado, noite (Brasília) — T4 v1 (movimento), sem gastar franquia
 
 Método: `bancada/t4_movimento.py`, 5 planos de 4 s com as imagens do T1 (C-01 e D-01/04/07/10), recorte com rembg
 (`isnet-general-use`), paralaxe em 2 camadas, respiração, pulso, foco, bolhas, vinheta, legenda palavra a palavra
@@ -86,7 +86,8 @@ Resultado: o pipeline funciona, mas **não vai para avaliação**:
 | 07/11/2026 | Guias de terceiros sobre monetização divergem entre si; só decidir com página oficial ou medição | Pesquisa de monetização | ADR-0015 |
 | 07/11/2026 | Exemplo de código da doc pode contradizer o esquema (o curl do schnell manda `seed`, que o esquema proíbe); vale o `schema-input.json` | Scripts da bancada | `docs/05` |
 | 07/11/2026 | No Windows, stdout e stderr do Python não são UTF-8 por padrão; scripts reconfiguram os dois | Teste do `bancada.py` | `bancada/bancada.py` |
-| 08/11/2026 | A trava de intervalo entre lotes pulou o lote A logo após o `testar`; o loop seguiu sem avisar no fim | T1 | Rodar o pulado no final; checar `lotes.csv` ao fim de cada rodada |
-| 08/11/2026 | A franquia gratuita não corta exatamente em 10.000 (passou para 10.570 sem 3036); não usar o 3036 como medida | T1 | `docs/05` (T1) |
-| 08/11/2026 | Paralaxe não funciona "inventando" o fundo atrás do personagem; precisa de cenário gerado sem ele | T4 v1 | `docs/05` (T3c e T4) |
-| 08/11/2026 | Conferir uma folha de quadros antes de mandar vídeo ao Gabriel pegou dois defeitos; vira passo fixo | T4 v1 | `.claude/rules/bancada.md` |
+| 07/11/2026 | A trava de intervalo entre lotes pulou o lote A logo após o `testar`; o loop seguiu sem avisar no fim | T1 | Rodar o pulado no final; checar `lotes.csv` ao fim de cada rodada |
+| 07/11/2026 | A franquia gratuita não corta exatamente em 10.000 (passou para 10.570 sem 3036); não usar o 3036 como medida | T1 | `docs/05` (T1) |
+| 07/11/2026 | Paralaxe não funciona "inventando" o fundo atrás do personagem; precisa de cenário gerado sem ele | T4 v1 | `docs/05` (T3c e T4) |
+| 07/11/2026 | Conferir uma folha de quadros antes de mandar vídeo ao Gabriel pegou dois defeitos; vira passo fixo | T4 v1 | `.claude/rules/bancada.md` |
+| 07/11/2026 | Falei "hoje às 21:05" pensando em UTC; para o Gabriel era sábado 23:54 e o certo era "domingo às 21:05". Horário sempre em Brasília, com dia da semana, conferido com `date` | Conversa | `CLAUDE.md` (Horários) |
