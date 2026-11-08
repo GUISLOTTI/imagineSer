@@ -31,3 +31,6 @@ tmp/
 .venv/
 __pycache__/
 *.pyc
+
+# Despejos de erro do Git Bash
+*.stackdump

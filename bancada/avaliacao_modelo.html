@@ -1,0 +1,247 @@
+<title>Bancada às Cegas</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Lilita+One&display=swap">
+<style>
+/* Mesa de luz: imagens grandes sobre fundo neutro com leve viés azul (mar do Imagine Ser); amarelo da legenda da marca
+   marca a nota escolhida. Uma coluna no celular, duas a partir de 900px. */
+:root {
+  --bg: #eef1f5;
+  --surface: #ffffff;
+  --fg: #16202b;
+  --muted: #5a6876;
+  --line: #d5dce4;
+  --accent: #ffd600;
+  --on-accent: #16202b;
+  --ok: #1f7a4d;
+  --erro: #b3261e;
+  --font-display: "Lilita One", "Arial Rounded MT Bold", "Trebuchet MS", sans-serif;
+  --font-body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e141b; --surface: #17202a; --fg: #e8edf2; --muted: #9aa8b6; --line: #2a3644;
+    --accent: #ffd600; --on-accent: #16202b; --ok: #5fd39a; --erro: #ff8a80; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e141b; --surface: #17202a; --fg: #e8edf2; --muted: #9aa8b6; --line: #2a3644;
+  --accent: #ffd600; --on-accent: #16202b; --ok: #5fd39a; --erro: #ff8a80; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 1rem; line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 48px;
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.topo {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg);
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px;
+  padding-block: 12px; border-bottom: 1px solid var(--line);
+}
+.marca { font-family: var(--font-display); font-size: 1.35rem; letter-spacing: 0.01em; margin: 0; }
+.marca small { display: block; font-family: var(--font-body); font-size: 0.78rem; font-weight: 700; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
+.progresso { display: flex; align-items: center; gap: 12px; font-variant-numeric: tabular-nums; }
+.barra { width: 120px; height: 8px; border-radius: 4px; background: var(--line); overflow: hidden; }
+.barra i { display: block; height: 100%; width: 0; background: var(--accent); transition: width 0.3s; }
+button { font: inherit; color: inherit; }
+.filtro { border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 8px 14px; min-height: 40px; cursor: pointer; }
+.filtro[aria-pressed="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.intro { max-width: 65ch; padding-block: 16px 8px; color: var(--muted); }
+.intro p { margin: 0 0 8px; }
+.intro dl { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin: 8px 0 0; }
+.intro dt { font-weight: 700; color: var(--fg); }
+.intro dd { margin: 0; }
+.aviso { border: 1px solid var(--erro); color: var(--erro); border-radius: 8px; padding: 10px 14px; margin-block: 8px; max-width: 65ch; }
+.grade { display: grid; grid-template-columns: 1fr; gap: 24px; padding-block: 16px; }
+@media (min-width: 900px) { .grade { grid-template-columns: 1fr 1fr; } }
+.cartao { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; min-width: 0; }
+.cartao.completo { border-color: var(--ok); }
+.foto { background: #000; display: flex; justify-content: center; }
+.foto img { display: block; width: 100%; height: auto; max-height: 82vh; object-fit: contain; }
+.corpo { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 14px; }
+.cabeca { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.tema { font-family: var(--font-display); font-size: 1.2rem; }
+.codigo { font-variant-numeric: tabular-nums; color: var(--muted); font-size: 0.85rem; }
+.conferir { margin: 0; font-size: 0.92rem; color: var(--muted); }
+.conferir b { color: var(--fg); }
+.criterio { display: flex; flex-direction: column; gap: 6px; }
+.criterio .rotulo { font-weight: 700; font-size: 0.95rem; }
+.notas { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; max-width: 360px; }
+.notas button {
+  min-height: 46px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg);
+  font-weight: 700; font-size: 1.05rem; cursor: pointer; font-variant-numeric: tabular-nums;
+}
+.notas button[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+.notas button:focus-visible, .filtro:focus-visible { outline: 3px solid var(--fg); outline-offset: 2px; }
+.estado { font-size: 0.85rem; min-height: 1.3em; color: var(--muted); }
+.estado.ok { color: var(--ok); }
+.estado.erro { color: var(--erro); }
+.fim { text-align: center; padding: 24px; border: 1px dashed var(--ok); border-radius: 12px; color: var(--ok); font-weight: 700; }
+@media (prefers-reduced-motion: reduce) { .barra i { transition: none; } }
+</style>
+
+<header class="topo">
+  <h1 class="marca"><small>Imagine Ser · bancada visual</small>T2 às cegas</h1>
+  <div class="progresso">
+    <span id="contagem">0/0</span>
+    <span class="barra" aria-hidden="true"><i id="barra"></i></span>
+    <button class="filtro" id="filtro" type="button" aria-pressed="false">Só pendentes</button>
+  </div>
+</header>
+
+<section class="intro">
+  <p>Cada imagem tem um código aleatório: você não sabe de qual modelo ela veio. Dê de 1 (péssimo) a 5 (ótimo) nos
+    quatro critérios, olhando no celular. Cada toque salva sozinho; pode parar e voltar depois.</p>
+  <dl>
+    <dt>Estilo</dt><dd>Parece animação 3D bonita e caprichada?</dd>
+    <dt>Anatomia</dt><dd>O bicho, órgão ou planeta está certo? Use a nota "Conferir" de cada imagem.</dd>
+    <dt>Nitidez</dt><dd>Fica nítida nesta tela, sem borrão?</dd>
+    <dt>Defeitos</dt><dd>5 = nenhum defeito. Desça a nota para braços a mais, deformações, manchas ou letras.</dd>
+  </dl>
+  <div class="aviso" id="aviso" hidden></div>
+</section>
+
+<main class="grade" id="grade"></main>
+<div class="fim" id="fim" hidden>Tudo avaliado. Pode fechar a página; o Claude lê as notas daqui.</div>
+
+<script>
+const IMAGENS = __IMAGENS__;
+const TEMAS = __TEMAS__;
+const CRITERIOS = [
+  { id: "estilo", nome: "Estilo 3D estilizado" },
+  { id: "anatomia", nome: "Anatomia e correção" },
+  { id: "nitidez", nome: "Nitidez no celular" },
+  { id: "defeitos", nome: "Sem defeitos" },
+];
+
+const notas = {};      // codigo -> {estilo, anatomia, nitidez, defeitos}
+const filas = {};      // codigo -> Promise (uma escrita por vez por documento)
+const cartoes = {};    // codigo -> elementos do cartão
+let db = null;
+let soPendentes = false;
+
+const completo = (c) => CRITERIOS.every((k) => Number.isInteger(notas[c]?.[k.id]));
+
+function montar() {
+  const grade = document.getElementById("grade");
+  for (const img of IMAGENS) {
+    const tema = TEMAS[img.tema] || { nome: img.tema, conferir: "" };
+    const art = document.createElement("article");
+    art.className = "cartao";
+    art.innerHTML = `
+      <div class="foto"><img loading="lazy" decoding="async" alt="Imagem ${img.codigo} (${tema.nome})"
+        width="${img.w}" height="${img.h}" src="${img.arquivo}"></div>
+      <div class="corpo">
+        <div class="cabeca"><span class="tema"></span><span class="codigo">img-${img.codigo}</span></div>
+        <p class="conferir"><b>Conferir:</b> <span></span></p>
+        ${CRITERIOS.map((k) => `
+          <div class="criterio" data-criterio="${k.id}">
+            <span class="rotulo" id="r-${img.codigo}-${k.id}">${k.nome}</span>
+            <div class="notas" role="group" aria-labelledby="r-${img.codigo}-${k.id}">
+              ${[1, 2, 3, 4, 5].map((n) => `<button type="button" id="b-${img.codigo}-${k.id}-${n}" data-nota="${n}" aria-pressed="false">${n}</button>`).join("")}
+            </div>
+          </div>`).join("")}
+        <div class="estado" aria-live="polite"></div>
+      </div>`;
+    art.querySelector(".tema").textContent = tema.nome;
+    art.querySelector(".conferir span").textContent = tema.conferir;
+    art.addEventListener("click", (ev) => {
+      const botao = ev.target.closest("button[data-nota]");
+      if (!botao) return;
+      const criterio = botao.closest(".criterio").dataset.criterio;
+      escolher(img.codigo, criterio, Number(botao.dataset.nota));
+    });
+    grade.appendChild(art);
+    cartoes[img.codigo] = { art, estado: art.querySelector(".estado") };
+  }
+}
+
+function pintar(codigo) {
+  const { art } = cartoes[codigo];
+  for (const k of CRITERIOS) {
+    const valor = notas[codigo]?.[k.id];
+    art.querySelectorAll(`[data-criterio="${k.id}"] button`).forEach((b) => {
+      b.setAttribute("aria-pressed", String(Number(b.dataset.nota) === valor));
+    });
+  }
+  art.classList.toggle("completo", completo(codigo));
+  art.hidden = soPendentes && completo(codigo);
+}
+
+function pintarProgresso() {
+  const feitos = IMAGENS.filter((i) => completo(i.codigo)).length;
+  document.getElementById("contagem").textContent = `${feitos}/${IMAGENS.length}`;
+  document.getElementById("barra").style.width = `${(100 * feitos) / IMAGENS.length}%`;
+  document.getElementById("fim").hidden = feitos < IMAGENS.length;
+}
+
+function avisar(texto) {
+  const el = document.getElementById("aviso");
+  el.textContent = texto;
+  el.hidden = !texto;
+}
+
+function escolher(codigo, criterio, nota) {
+  if (!db) { avisar("As notas não podem ser salvas nesta visualização. Abra a página logado no claude.ai."); return; }
+  notas[codigo] = { ...(notas[codigo] || {}), [criterio]: nota };
+  pintar(codigo);
+  pintarProgresso();
+  salvar(codigo);
+}
+
+function salvar(codigo) {
+  const { estado } = cartoes[codigo];
+  estado.className = "estado";
+  estado.textContent = "Salvando…";
+  filas[codigo] = (filas[codigo] || Promise.resolve()).then(async () => {
+    const corpo = { ...notas[codigo], atualizado_em: new Date().toISOString() };
+    for (let tentativa = 1; tentativa <= 2; tentativa++) {
+      try {
+        await db.doc("notas/" + codigo).set(corpo);
+        estado.className = "estado ok";
+        estado.textContent = completo(codigo) ? "Salvo · completa" : "Salvo";
+        return;
+      } catch (e) {
+        if (e?.code === "unavailable" && tentativa === 1) {
+          await new Promise((r) => setTimeout(r, 600 + Math.random() * 900));
+          continue;
+        }
+        estado.className = "estado erro";
+        estado.textContent = "Não salvou. Toque na nota de novo.";
+        return;
+      }
+    }
+  });
+}
+
+document.getElementById("filtro").addEventListener("click", (ev) => {
+  soPendentes = !soPendentes;
+  ev.currentTarget.setAttribute("aria-pressed", String(soPendentes));
+  IMAGENS.forEach((i) => pintar(i.codigo));
+});
+
+montar();
+pintarProgresso();
+
+(async () => {
+  db = window.claude?.use ? await window.claude.use("db") : null;
+  if (!db) { avisar("As notas não podem ser salvas nesta visualização. Abra a página logado no claude.ai."); return; }
+  const espera = setTimeout(() => avisar("Ainda não consegui carregar as notas já salvas. Confira a conexão."), 10000);
+  db.collection("notas").onSnapshot((snap) => {
+    if (!snap.metadata.fromCache) { clearTimeout(espera); avisar(""); }
+    for (const doc of snap.docs) {
+      if (!cartoes[doc.id]) continue;
+      const d = doc.data() || {};
+      notas[doc.id] = Object.fromEntries(CRITERIOS.map((k) => [k.id, d[k.id]]));
+      pintar(doc.id);
+    }
+    pintarProgresso();
+  }, (e) => {
+    clearTimeout(espera);
+    avisar(e?.code === "revoked" ? "" : "As notas salvas não carregaram. Recarregue a página mais tarde.");
+  });
+})();
+</script>
