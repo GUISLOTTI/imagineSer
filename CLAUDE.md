@@ -103,8 +103,9 @@ Fase atual: **Semana 0 — transplante e bancada de testes**. Nenhum código de 
 
 Repositório: `github.com/GUISLOTTI/imagineSer` (privado). Estado das contas em `docs/08`.
 
-1. Claude: scripts da bancada visual T1–T5 (`docs/05-bancada-visual.md`) em `bancada/`. Gabriel: token da
-   Cloudflare no `.env` quando o Claude cobrar (scripts prontos).
+1. Bancada visual (`docs/05-bancada-visual.md`): scripts do T1 e do T2 prontos e testados em modo simulado.
+   Gabriel: token da Cloudflare no `.env` (cobrado em 07/11). Claude: rodar `testar` → T1 → T2 → página de
+   avaliação às cegas; scripts do T3–T5 depois dos resultados.
 2. Gabriel: conectar o YouTube ao Buffer quando o canal tiver o @ (Claude lembra).
 3. Claude: 5 vozes Chirp 3 HD para o Gabriel ouvir (aí entra o Google Cloud, com cartão).
 4. Claude: um episódio feito à mão com rascunhos das skills (calibra prompts); Gabriel aprova ou nega.

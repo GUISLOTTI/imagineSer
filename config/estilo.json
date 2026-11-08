@@ -1,0 +1,10 @@
+{
+  "versao": 0,
+  "status": "Rascunho para a bancada (docs/05). Vira a bíblia visual depois do T2.",
+  "prefixo": "Stylized 3D animated movie still, appealing character design, soft cinematic lighting with a gentle rim light, rich but natural colors, clean and simple background, main subject large and centered, shallow depth of field, highly detailed",
+  "restricoes": "No text, no letters, no captions, no watermark, no logo",
+  "notas": [
+    "FLUX não aceita prompt negativo: as restrições vão escritas no próprio prompt.",
+    "Nada de nomes de estúdios, filmes, personagens ou artistas no prompt (originalidade, regra 7)."
+  ]
+}

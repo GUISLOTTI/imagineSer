@@ -1,0 +1,45 @@
+{
+  "_uso": "Sujeitos em inglês (o prefixo de estilo vem de config/estilo.json). As notas de anatomia servem só para a avaliação do Gabriel; não vão para nenhum vídeo.",
+  "t1": {
+    "sujeito": "A friendly common octopus character, full body, eight curling arms, large expressive eyes, resting on a sandy sea floor, front view",
+    "sujeito_com_referencia": "The octopus character from image 0, with the same colors, shape and proportions, now swimming above a colorful coral reef"
+  },
+  "t2": [
+    {
+      "id": "polvo",
+      "notas_anatomia": "8 braços com ventosas; sem ossos nem carapaça; o corpo (manto) fica atrás da cabeça.",
+      "prompts": [
+        "A common octopus with eight curling arms resting on a coral reef, curious large eyes, underwater light rays",
+        "A common octopus changing its skin color to blend in with the rocks around it, close-up, eight arms visible",
+        "A common octopus squeezing its soft body through a narrow gap between two rocks, playful mood, small bubbles"
+      ]
+    },
+    {
+      "id": "figado",
+      "notas_anatomia": "Dois lobos principais, o direito maior; cor marrom-avermelhada; vesícula biliar embaixo.",
+      "prompts": [
+        "A human liver with its large right lobe and smaller left lobe, glowing softly inside a translucent stylized human torso",
+        "A human liver floating on a dark gradient background, with blood vessels and the small green gallbladder tucked beneath it",
+        "A cutaway view of a human liver revealing tiny hexagonal lobules inside, educational and friendly look"
+      ]
+    },
+    {
+      "id": "saturno",
+      "notas_anatomia": "Anéis finos e planos, no plano do equador; planeta achatado nos polos; faixas de nuvens claras.",
+      "prompts": [
+        "The planet Saturn with its wide, thin, flat rings, seen from slightly above, lit by the Sun from the side, deep starfield",
+        "A close-up of Saturn's rings made of countless icy chunks and dust, the planet glowing in the background",
+        "A small robotic space probe flying past Saturn, the planet huge in the frame, the rings casting shadows on the clouds"
+      ]
+    },
+    {
+      "id": "tartaruga",
+      "notas_anatomia": "Tartaruga marinha: nadadeiras, não patas. Jabuti: patas grossas e casco alto. Casco com placas.",
+      "prompts": [
+        "A green sea turtle swimming in clear blue water, detailed shell plates, front flippers spread wide",
+        "A baby sea turtle climbing out of its egg on a sandy beach at night, soft moonlight",
+        "A tortoise walking slowly across dry grassland, tall domed shell, thick wrinkled legs"
+      ]
+    }
+  ]
+}

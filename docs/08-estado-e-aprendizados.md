@@ -9,7 +9,7 @@ Quando passar de ~200 linhas, mover medições e lições antigas para `docs/arq
 | --- | --- | --- |
 | Claude | Créditos de uso extra desligados ✔ | — |
 | GitHub | Repositório privado `GUISLOTTI/imagineSer` ✔ | Confirmar que não há forma de pagamento; ajustes de Actions na Fase 1 |
-| Cloudflare | Conta e token pendentes | Gabriel cria o token quando os scripts da bancada estiverem prontos |
+| Cloudflare | Conta e token pendentes; scripts T1/T2 prontos (07/11) | Gabriel cria o token (Workers AI + Account Analytics: Read) |
 | Buffer | Instagram e TikTok conectados ✔ | Confirmar tipo de conta e modo de publicação (Fase 3, pela API) |
 | YouTube | Conta criada; canal ainda sem @ | Conectar ao Buffer quando o @ liberar (previsto para 08/11) |
 | Google Cloud | Pendente | Na vez das vozes (exige cartão) |
@@ -34,7 +34,8 @@ YouTube: sem horários até o canal ser conectado.
 
 ## Medições
 
-Formato: data · o que · método · resultado · arquivo de dados. Nenhuma ainda (a bancada começa na Fase 0).
+Formato: data · o que · método · resultado · arquivo de dados. Nenhuma real ainda. Dados brutos da bancada:
+`bancada/resultados.csv` (por imagem) e `bancada/lotes.csv` (por lote). O modo `--simular` não gera medição.
 
 ## Lições
 
@@ -43,3 +44,5 @@ Formato: data · o que · método · resultado · arquivo de dados. Nenhuma aind
 | 07/11/2026 | No Windows, o Git converte LF em CRLF e quebra scripts bash; `*.sh` fica fixo em LF | Primeiro commit | `.gitattributes` |
 | 07/11/2026 | Neste PC o Claude Code tem Bash e PowerShell; hooks e bloqueios precisam cobrir os dois | Teste do hook | `.claude/settings.json` |
 | 07/11/2026 | Guias de terceiros sobre monetização divergem entre si; só decidir com página oficial ou medição | Pesquisa de monetização | ADR-0015 |
+| 07/11/2026 | Exemplo de código da doc pode contradizer o esquema (o curl do schnell manda `seed`, que o esquema proíbe); vale o `schema-input.json` | Scripts da bancada | `docs/05` |
+| 07/11/2026 | No Windows, stdout e stderr do Python não são UTF-8 por padrão; scripts reconfiguram os dois | Teste do `bancada.py` | `bancada/bancada.py` |

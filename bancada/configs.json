@@ -1,0 +1,50 @@
+{
+  "_fonte": "Parâmetros conferidos em 07/11/2026 nos esquemas oficiais da Cloudflare (schema-input.json de cada modelo) e no changelog do klein 4B (15/01/2026). schnell: só prompt e steps (máx. 8), sem seed nem tamanho. klein 4B: multipart; prompt, width/height 256–1920, seed, guidance, input_image_0..3 (< 512x512); steps fixo em 4.",
+  "_termos": "https://bfl.ai/legal/terms-of-service (link 'Terms and License' das páginas dos modelos). Licença Apache 2.0 de ambos a confirmar antes do ADR-0005.",
+  "A": {
+    "descricao": "FLUX.1 schnell, 4 passos (saída quadrada; tamanho não configurável)",
+    "modelo": "@cf/black-forest-labs/flux-1-schnell",
+    "formato": "json",
+    "passos": 4
+  },
+  "B": {
+    "descricao": "FLUX.1 schnell, 8 passos",
+    "modelo": "@cf/black-forest-labs/flux-1-schnell",
+    "formato": "json",
+    "passos": 8
+  },
+  "C": {
+    "descricao": "FLUX.2 klein 4B, só texto, 768x1344 (vertical)",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "formato": "multipart",
+    "largura": 768,
+    "altura": 1344,
+    "sufixo_prompt": "Vertical portrait composition"
+  },
+  "D": {
+    "descricao": "FLUX.2 klein 4B, 1 imagem de referência, 768x1344",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "formato": "multipart",
+    "largura": 768,
+    "altura": 1344,
+    "referencias": 1,
+    "sufixo_prompt": "Vertical portrait composition"
+  },
+  "E": {
+    "descricao": "FLUX.2 klein 4B, 3 imagens de referência, 768x1344",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "formato": "multipart",
+    "largura": 768,
+    "altura": 1344,
+    "referencias": 3,
+    "sufixo_prompt": "Vertical portrait composition"
+  },
+  "F": {
+    "descricao": "FLUX.2 klein 4B, só texto, vertical nativo 1080x1920 (T5)",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "formato": "multipart",
+    "largura": 1080,
+    "altura": 1920,
+    "sufixo_prompt": "Vertical portrait composition"
+  }
+}
