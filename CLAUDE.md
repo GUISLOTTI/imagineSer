@@ -106,8 +106,8 @@ Fase atual: **Semana 0 — transplante e bancada de testes**. Nenhum código de 
 Repositório: `github.com/GUISLOTTI/imagineSer` (privado). Estado das contas em `docs/08`.
 
 1. Bancada visual (`docs/05-bancada-visual.md`): T1 concluído no sábado 07/11 à noite (números em `docs/08`).
-   Próximo: T2 a partir de domingo 08/11 às 21:00 (Brasília), quando a franquia renova; depois a página de avaliação
-   às cegas para o Gabriel; depois T3 e T4 v2 (cenários sem o personagem), T5.
+   T2: 43/48 imagens geradas no domingo 08/11; avaliação às cegas publicada (link em `docs/08`), aguardando as notas
+   do Gabriel. Segunda 09/11, 21:05: T3 + 5 imagens restantes do B (agendado na sessão aberta); depois T4 v2 e T5.
 2. Gabriel: conectar o YouTube ao Buffer quando o canal tiver o @ (Claude lembra).
 3. Claude: 5 vozes Chirp 3 HD para o Gabriel ouvir (aí entra o Google Cloud, com cartão).
 4. Claude: um episódio feito à mão com rascunhos das skills (calibra prompts); Gabriel aprova ou nega.

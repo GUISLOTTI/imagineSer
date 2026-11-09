@@ -374,20 +374,24 @@ def cmd_embaralhar(amb: Ambiente, args) -> None:
     imagens = sorted(p for p in origem.rglob("*") if p.suffix in EXTENSOES) if origem.exists() else []
     if not imagens:
         raise SystemExit(f"Nenhuma imagem em {origem}.")
+    # Incremental: imagens já embaralhadas mantêm o código (as notas dadas continuam valendo); só as novas ganham código.
     destino = amb.saida / f"{args.teste}-cegas"
-    if destino.exists():
-        shutil.rmtree(destino)
-    destino.mkdir(parents=True)
-    codigos = random.SystemRandom().sample(range(1000, 10000), len(imagens))
-    chave = []
-    for codigo, caminho in sorted(zip(codigos, imagens)):
+    destino.mkdir(parents=True, exist_ok=True)
+    caminho_chave = amb.saida / f"{args.teste}-chave.csv"
+    chave = ler_csv(caminho_chave)
+    ja = {linha["arquivo"] for linha in chave}
+    usados = {int(linha["codigo"]) for linha in chave}
+    novas = [c for c in imagens if c.relative_to(amb.saida).as_posix() not in ja]
+    livres = [n for n in range(1000, 10000) if n not in usados]
+    codigos = random.SystemRandom().sample(livres, len(novas))
+    for codigo, caminho in sorted(zip(codigos, novas)):
         shutil.copy2(caminho, destino / f"img-{codigo}{caminho.suffix}")
         prov = json.loads(caminho.with_suffix(".json").read_text("utf-8"))
         chave.append({"codigo": codigo, "arquivo": caminho.relative_to(amb.saida).as_posix(),
                       "config": prov["config"], "tamanho_recebido": prov["tamanho_recebido"]})
-    reescrever_csv(amb.saida / f"{args.teste}-chave.csv", ["codigo", "arquivo", "config", "tamanho_recebido"], chave)
-    print(f"{len(imagens)} imagens em {destino.relative_to(AQUI).as_posix()}; chave em "
-          f"{args.teste}-chave.csv (não abrir antes das notas).")
+    reescrever_csv(caminho_chave, ["codigo", "arquivo", "config", "tamanho_recebido"], chave)
+    print(f"{len(novas)} imagem(ns) nova(s), {len(chave)} no total em {destino.relative_to(AQUI).as_posix()}; "
+          f"chave em {caminho_chave.name} (não abrir antes das notas).")
 
 
 def media(valores: list[float]) -> str:

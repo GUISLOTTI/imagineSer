@@ -77,6 +77,18 @@ Resultado: o pipeline funciona, mas **não vai para avaliação**:
 - As 4 imagens D vistas têm **a mesma pose** da referência: a troca de pose depende do T3.
 - Legenda a 62% da altura cobria o personagem; a 72% fica legível e livre do rosto.
 
+### 08/11/2026, domingo, 21:05–21:10 (Brasília) — T2 (qualidade), geração
+
+43 de 48 imagens em 5 min (C, F e A completas; B com 7 de 12). O bloqueio diário veio com **código 4006** (a doc
+oficial diz 3036) e com o dia em **8.407,9 neurons** pelo analytics, não em 10.000; a chamada barrada também
+apareceu na conta. No dia anterior o corte não veio nem em 10.570. Conclusão medida: o corte da Cloudflare oscila;
+o teto que vale é o nosso (8.000/dia na produção, previsto no plano). Faltam 5 do B (segunda 09/11, 21:05).
+
+Avaliação às cegas publicada para o Gabriel: https://claude.ai/artifact/GQuPkd7YzeeyaxGRb26XX6 (notas no `db` do
+artifact, coleção `notas`, documento = código da imagem; chave código→configuração só em
+`bancada/saida/t2-chave.csv`, fora do Git). Ressalva: o formato entrega a família (schnell quadrado, klein vertical);
+dentro de cada família a avaliação continua cega.
+
 ## Lições
 
 | Data | Lição | Origem | Virou regra em |
@@ -91,3 +103,5 @@ Resultado: o pipeline funciona, mas **não vai para avaliação**:
 | 07/11/2026 | Paralaxe não funciona "inventando" o fundo atrás do personagem; precisa de cenário gerado sem ele | T4 v1 | `docs/05` (T3c e T4) |
 | 07/11/2026 | Conferir uma folha de quadros antes de mandar vídeo ao Gabriel pegou dois defeitos; vira passo fixo | T4 v1 | `.claude/rules/bancada.md` |
 | 07/11/2026 | Falei "hoje às 21:05" pensando em UTC; para o Gabriel era sábado 23:54 e o certo era "domingo às 21:05". Horário sempre em Brasília, com dia da semana, conferido com `date` | Conversa | `CLAUDE.md` (Horários) |
+| 08/11/2026 | O limite diário veio como 4006, não como o 3036 da doc oficial; o script não reconheceu e repetiu 2 vezes | T2 | `bancada/cf.py` (trata 3036, 4006 e a mensagem) |
+| 08/11/2026 | Reembaralhar trocaria os códigos e invalidaria notas já dadas; o embaralhamento passou a ser incremental | T2 | `bancada/bancada.py` (`embaralhar`) |

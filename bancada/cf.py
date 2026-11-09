@@ -4,7 +4,8 @@ Segredos: lidos do arquivo de ambiente da raiz (CF_ACCOUNT_ID, CF_AI_TOKEN). Nun
 as mensagens de erro carregam só o código e a mensagem devolvidos pela Cloudflare.
 
 Erros (https://developers.cloudflare.com/workers-ai/platform/errors/, conferido em 07/11/2026):
-- 3036 (HTTP 429): franquia gratuita do dia esgotada. Nunca repetir; renova às 00:00 UTC.
+- 3036 (HTTP 429): franquia gratuita do dia esgotada. Nunca repetir; renova às 00:00 UTC. Na prática (medido em
+  09/11/2026) a API devolveu 4006 com a mesma mensagem; os dois códigos são tratados como limite diário.
 - 5035 (HTTP 403): modelo exige Workers Paid. Nunca assinar: a configuração sai da bancada.
 - 3040 (HTTP 429), outros 429 e 5xx, timeout: transitórios; até 3 tentativas com espera crescente.
 """
@@ -131,7 +132,8 @@ def gerar(cred: Credenciais, pedido: Pedido) -> Resultado:
             return Resultado(base64.b64decode(imagem), segundos, tentativa)
 
         codigo, mensagem = _erro(resp)
-        if codigo == 3036:
+        # A doc oficial lista 3036, mas em 09/11/2026 o limite diário veio como 4006 (medido); trata os dois.
+        if codigo in (3036, 4006) or "daily free allocation" in mensagem:
             raise LimiteDiarioAtingido(mensagem, codigo, resp.status_code)
         if codigo == 5035:
             raise ExigePlanoPago(mensagem, codigo, resp.status_code)
