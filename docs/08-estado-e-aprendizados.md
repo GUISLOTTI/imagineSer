@@ -16,6 +16,11 @@ Quando passar de ~200 linhas, mover medições e lições antigas para `docs/arq
 | TikTok | Manter como **conta pessoal**: o Creator Rewards exige "personal account" (ADR-0012) | — |
 | Instagram | Deve ser conta profissional (Criador) para publicar sem notificação | Confirmar na Fase 3 |
 
+**A bancada roda só no PC de casa.** Ficam fora do Git: `bancada/saida/` (imagens e a chave cega do T2),
+`bancada/.venv`, o modelo do rembg (`~/.u2net`) e o `.env`. De outro PC (clone do repositório) dá para trabalhar em
+docs e código, mas não na bancada, e os dois PCs dividiriam a mesma franquia diária. Para continuar a conversa de
+fora, o Gabriel usa o Remote Control (`/remote-control`) na sessão do PC de casa, que precisa ficar ligado.
+
 ## Agenda sugerida pelo Buffer
 
 Gerada pelo Buffer com a meta de 7 posts/semana. Ponto de partida, não decisão (ADR-0015). Em 3/semana, o publicador
