@@ -22,7 +22,7 @@ Fase atual: **Semana 0 — transplante e bancada de testes**. Nenhum código de 
 4. **Publicação só pelo workflow `publicar`.** Nunca rode `publicar` localmente nem crie posts no Buffer por outro caminho.
    Exceção: o próprio Gabriel pode postar pela interface do Buffer, como contingência.
 5. **Somente vias oficiais:** APIs oficiais e o Buffer (parceiro oficial). Nada de scraping, automação de navegador
-   ou endpoints não documentados.
+   em sites de terceiros ou endpoints não documentados (o Chrome sem janela que renderiza a nossa cena local pode).
 6. **Fatos:** nunca invente fato, número, citação, DOI ou fonte. Toda frase factual do roteiro aponta para uma
    afirmação em `afirmacoes.json` com trecho literal da fonte. Sem fonte suficiente: reformule ou remova.
 7. **Originalidade e licenças:** nada de material de terceiros sem licença registrada; todo asset grava proveniência
@@ -39,8 +39,8 @@ Fase atual: **Semana 0 — transplante e bancada de testes**. Nenhum código de 
   Elas só escrevem arquivos; a saída é validada por schema (`schemas/`).
 - **`Factory.Cli` (.NET 10)** faz tudo que tem efeito externo: validar, produzir (imagens, voz, legendas, render,
   QA), publicar, reconciliar, contadores de uso.
-- **Serviços:** Cloudflare Workers AI Free (imagens FLUX), Cloudflare R2 (mídia), Google Cloud TTS Chirp 3 HD (voz),
-  Buffer Free (publicação nas 3 redes).
+- **Serviços:** Cloudflare R2 (mídia), Google Cloud TTS Chirp 3 HD (voz), Buffer Free (publicação nas 3 redes).
+  Visual: cena 3D por código (Three.js, render local, sem custo; ADR-0017 em teste); Workers AI Free (FLUX) só apoio.
 - **Fluxo (por estoque, ADR-0011):** roteiros semanais (Claude) → PR 1 → aprova ou nega → produzir → PR 2 →
   aprova ou nega → publicar no próximo horário livre (Buffer) → reconciliar 3×/dia. Sem prazos: horário sem vídeo
   aprovado fica vazio. Cadência inicial: 3 episódios/semana.
@@ -105,10 +105,11 @@ Fase atual: **Semana 0 — transplante e bancada de testes**. Nenhum código de 
 
 Repositório: `github.com/GUISLOTTI/imagineSer` (privado). Estado das contas em `docs/08`.
 
-1. Bancada visual (`docs/05-bancada-visual.md`): T1 concluído no sábado 07/11 à noite (números em `docs/08`).
-   T2: 43/48 imagens geradas no domingo 08/11; avaliação às cegas publicada (link em `docs/08`), aguardando as notas
-   do Gabriel. Segunda 09/11, 21:05: T3 + 5 imagens restantes do B (agendado na sessão aberta); depois T4 v2 e T5.
+1. Formato visual = animação 3D feita por código (ADR-0017, Proposta; referências analisadas em `docs/08`).
+   Protótipo T6 "polvo" pronto no sábado 14/11 (`bancada/saida/t6/polvo.mp4`); aguardando o Gabriel ver. Depois:
+   medir o render no runner do GitHub (workflow de bancada), efeitos sonoros e legenda sincronizada pela voz.
+   T3–T5 suspensos; o T2 não precisa mais de notas.
 2. Gabriel: conectar o YouTube ao Buffer quando o canal tiver o @ (Claude lembra).
 3. Claude: 5 vozes Chirp 3 HD para o Gabriel ouvir (aí entra o Google Cloud, com cartão).
-4. Claude: um episódio feito à mão com rascunhos das skills (calibra prompts); Gabriel aprova ou nega.
-5. ADRs de imagem e voz com números medidos → Fase 1: solução .NET, schemas e skills definitivas (`docs/01` §10).
+4. Claude: um episódio feito à mão (cena 3D + voz) com rascunhos das skills; Gabriel aprova ou nega.
+5. ADRs de visual e voz com números medidos → Fase 1: solução .NET, schemas e skills definitivas (`docs/01` §10).

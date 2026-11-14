@@ -94,6 +94,40 @@ artifact, coleção `notas`, documento = código da imagem; chave código→conf
 `bancada/saida/t2-chave.csv`, fora do Git). Ressalva: o formato entrega a família (schnell quadrado, klein vertical);
 dentro de cada família a avaliação continua cega.
 
+Sobre a página do T2: as 43 notas gravadas no `db` têm autor "claude" (09/11, 11:50 de Brasília, numa sessão sem
+registro no Git); não são a avaliação do Gabriel. Com o ADR-0017, o T2 não precisa mais de notas.
+
+O agendamento de segunda 09/11 (T3 + 5 imagens do B) **não rodou**: a sessão fechou antes. Nada foi gasto.
+
+### 14/11/2026, sábado, manhã (Brasília) — Referências do Gabriel (`inspiração/`, fora do Git)
+
+Método: duração e formato pelo FFmpeg; cortes por detecção de cena (limiar 0,25); folhas de quadros a cada 3 s e
+trechos a 4 fps.
+
+| Vídeo | Duração | Formato | Cortes | O que se vê |
+| --- | --- | --- | --- | --- |
+| Como construir um prédio | 2:27 | 720×1280, 30 fps | 10 (quase todos entre 133 e 138 s) | Low-poly; casa vira prédio andar por andar; etiquetas em pílula, setas de força, prédio em raio X; boneco reagindo; chamada para comentário no fim |
+| Como funciona uma caneta | 2:58 | 720×1280, 30 fps | 0 (plano-sequência) | Só formas geométricas; a caneta se monta peça por peça; tubo transparente mostra a tinta; barra de progresso no topo |
+| Você é um rato | 1:39 | 716×1274, 24 fps | 20 | Mais cinematográfico (desfoque de profundidade); rato com animação de esqueleto; cenário urbano |
+
+Padrões comuns: narração em segunda pessoa; cadeia problema → solução (tenta, falha, conserta); cada frase tem uma
+ação na tela; legenda grande no terço inferior, uma palavra por vez, com palavras-chave em amarelo. Página do criador
+(voceconstruiu.xyz, lida em 14/11): curso de R$ 497 com "+100 peças 3D e +120 efeitos sonoros", "dois planos pagos:
+um assistente de IA e um gerador de voz", sem Blender. Seguidores e faturamento citados lá são alegação dele.
+
+### 14/11/2026, sábado (Brasília) — T6, cena 3D por código (protótipo do polvo)
+
+Método: `bancada/cena3d/renderizar.py`; Playwright 1.64.1 com o Chrome instalado; Three.js r186; JPEG 0,95 →
+x264 crf 18. Vídeo de 20,6 s, 30 fps, sem voz. Arquivo: `bancada/saida/t6/polvo.mp4` (+ `.json`).
+
+| Modo | Resolução | ms/quadro | Render de 20,6 s | Estimativa para 150 s |
+| --- | --- | --- | --- | --- |
+| GPU deste PC (RTX 2060 Super, D3D11) | 1080×1920 | 52 | 32 s | ~4 min |
+| Só CPU (SwiftShader, 12 núcleos) | 1080×1920 | 273 | 169 s | ~20 min |
+| Só CPU (SwiftShader, 12 núcleos) | 720×1280 | 131 | 81 s | ~10 min |
+
+O runner padrão do GitHub tem menos núcleos que este PC: a medição de verdade fica para o workflow de bancada.
+
 ## Lições
 
 | Data | Lição | Origem | Virou regra em |
@@ -110,3 +144,6 @@ dentro de cada família a avaliação continua cega.
 | 07/11/2026 | Falei "hoje às 21:05" pensando em UTC; para o Gabriel era sábado 23:54 e o certo era "domingo às 21:05". Horário sempre em Brasília, com dia da semana, conferido com `date` | Conversa | `CLAUDE.md` (Horários) |
 | 08/11/2026 | O limite diário veio como 4006, não como o 3036 da doc oficial; o script não reconheceu e repetiu 2 vezes | T2 | `bancada/cf.py` (trata 3036, 4006 e a mensagem) |
 | 08/11/2026 | Reembaralhar trocaria os códigos e invalidaria notas já dadas; o embaralhamento passou a ser incremental | T2 | `bancada/bancada.py` (`embaralhar`) |
+| 14/11/2026 | Montei a bancada para imagens paradas com câmera (o briefing sugeria a abordagem híbrida), mas o Gabriel queria animação 3D de verdade. Antes de testar um formato, analisar as referências quadro a quadro | Correção do Gabriel | `.claude/rules/bancada.md` |
+| 14/11/2026 | Tarefa em segundo plano morre quando a sessão fecha (o T3 agendado para 09/11 não rodou) | Agendamento de 09/11 | Agendar só por workflow (Fase 1) ou rodar com o Gabriel presente |
+| 14/11/2026 | No Three.js, `#include` de shader precisa de linha própria; em linha única o shader não compila | T6 | — |

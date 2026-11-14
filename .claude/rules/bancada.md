@@ -21,3 +21,7 @@ paths:
 - Nada vai para o Gabriel sem ter rodado de verdade pelo menos uma vez.
 - Vídeo: antes de mandar, extrair uma folha de quadros (início, meio, fim de cada plano e transições) e conferir
   recorte, legenda e artefatos. Defeito conhecido não vai para avaliação.
+- Formato visual novo: antes de montar o teste, analisar as referências do Gabriel quadro a quadro (duração, cortes,
+  folha de quadros) e registrar em `docs/08`.
+- Cenas 3D (T6): tudo em função do tempo `t` (nada de relógio nem `Math.random` sem semente); conferir uma folha de
+  quadros (`--quadros`) antes de renderizar o vídeo inteiro.

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Cena 3D</title>
+<style>
+  @font-face { font-family: "Lilita One"; src: url(/fontes/LilitaOne-Regular.ttf); }
+  html, body { margin: 0; background: #000; }
+  canvas { display: block; max-height: 100vh; margin: 0 auto; }
+</style>
+<script type="importmap">{ "imports": { "three": "./vendor/three.module.js" } }</script>
+</head>
+<body>
+<script type="module">
+  // Uso: cena.html?cena=polvo&w=1080&h=1920  (o renderizar.py chama window.cena.quadro(t) quadro a quadro)
+  //      cena.html?cena=polvo&play=1          (prévia em tempo real no navegador)
+  const p = new URLSearchParams(location.search);
+  const nome = (p.get('cena') || 'polvo').replace(/[^a-z0-9_-]/gi, '');
+  await document.fonts.load('100px "Lilita One"');
+  const mod = await import(`./cenas/${nome}.js`);
+  const cena = await mod.criar({ largura: +p.get('w') || 1080, altura: +p.get('h') || 1920 });
+  window.cena = cena;
+  window.cenaPronta = true;
+  if (p.get('play')) {
+    document.body.appendChild(cena.canvas);
+    const t0 = performance.now();
+    const passo = () => { cena.quadro(((performance.now() - t0) / 1000) % cena.duracao, 'nenhum'); requestAnimationFrame(passo); };
+    passo();
+  }
+</script>
+</body>
+</html>

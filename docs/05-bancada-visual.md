@@ -1,5 +1,9 @@
 # Bancada visual (Fase 0) — protocolo
 
+> **14/11/2026:** as referências do Gabriel são animação 3D feita por código, não imagens paradas. O teste novo é o
+> **T6** (abaixo; ADR-0017, Proposta). T3–T5 ficam suspensos e o T2 não precisa mais de notas. T1 e T2 continuam
+> valendo como medição do Workers AI, caso as imagens geradas voltem como apoio (texturas, fundos).
+
 Objetivo: decidir, com dados, o modelo e a técnica de imagem do MVP. Custo: US$ 0 (Cloudflare Workers AI no plano
 Workers Free). Duração estimada: 5 dias úteis. Resultado: ADR-0005 passa de "Proposta" para "Aceita".
 
@@ -83,7 +87,24 @@ Definição exata em `bancada/configs.json`; prompts em `bancada/prompts.json`; 
 - Comparar recorte do quadrado + ampliação local vs. saída vertical nativa (se o klein aceitar tamanho).
 - **Passa:** sem perda de nitidez perceptível no celular a 1080×1920.
 
+### T6 — Cena 3D por código (14/11/2026)
+- Cada episódio é uma cena Three.js (`bancada/cena3d/cenas/<nome>.js`) sobre o kit `bancada/cena3d/kit.js`:
+  câmera contínua, tubos que se deformam (braços, algas), pedras low-poly, legenda palavra a palavra com destaque,
+  etiquetas presas a objetos, números e barra de progresso. Tudo é função do tempo `t`, então o render quadro a
+  quadro é determinístico.
+- `bancada/cena3d/renderizar.py` abre a página num Chrome sem janela (Playwright), pede cada quadro e entrega ao
+  FFmpeg. O servidor local só serve `bancada/cena3d/` e `assets-marca/fontes/`.
+- **Passa:** (a) o Gabriel acha o visual no nível das referências; (b) no runner do GitHub, um episódio de 150 s
+  renderiza em menos de 30 min (720p ou 1080p); (c) mesmo `t` gera o mesmo quadro.
+- Protótipo: `polvo` (20,6 s, texto de teste, sem voz). Próximos: voz e efeitos sonoros, legenda sincronizada pela
+  voz, medição no runner.
+
 ## Como rodar
+
+T6: `bancada/.venv/Scripts/python bancada/cena3d/renderizar.py --cena polvo` (opções: `--rascunho` 540×960 a 15 fps,
+`--gl swiftshader` só CPU como no runner, `--quadros 0,5,10` só uma folha de quadros PNG). Saída em
+`bancada/saida/t6/` com um `.json` de medição ao lado.
+
 
 Na raiz, com o ambiente virtual (`python -m venv bancada/.venv` e `pip install -r bancada/requirements.txt`):
 `bancada/.venv/Scripts/python bancada/bancada.py <comando>`. Ordem: `testar` → `t1` para cada configuração (C antes

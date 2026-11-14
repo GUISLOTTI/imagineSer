@@ -162,3 +162,28 @@ consequências. Para mudar uma decisão aceita, crie um ADR novo que a substitua
   5–10 min; (b) compilação temática dos próprios Shorts com narração de ligação (reaproveita imagens; conferir antes
   a política de conteúdo reutilizado e inautêntico do YouTube).
 - **Consequências:** nada muda no MVP.
+
+## ADR-0017 — Linguagem visual: animação 3D feita por código
+- **Data:** 2026-11-14 · **Status:** Proposta (falta: o Gabriel aprovar o visual do protótipo e medir o render no
+  runner do GitHub)
+- **Contexto:** o Gabriel quer vídeos animados, não imagens paradas com câmera, e mandou três referências do formato
+  (análise em `docs/08`). Elas são cenas 3D low-poly montadas e animadas por código: câmera contínua (a da caneta tem
+  2:58 sem nenhum corte), peças que se montam, etiquetas presas aos objetos, setas, raio X e legenda palavra a
+  palavra. A página do criador fala em "+100 peças 3D" e diz que não precisa de Blender. Gerar vídeo por IA está fora
+  do orçamento (regra 1).
+- **Proposta:** cada episódio vira uma cena Three.js (MIT) escrita pelo Claude a partir do roteiro, sobre um kit
+  reutilizável (câmera, etiquetas, legenda, materiais, personagens) que cresce a cada episódio. A cena é renderizada
+  quadro a quadro num Chrome sem janela (Playwright) e montada pelo FFmpeg. Não há modelo generativo de imagem, então
+  o custo é zero e não há franquia diária. O FLUX do Workers AI deixa de ser o caminho principal (pode voltar para
+  texturas ou fundos, se um teste mostrar ganho). T3–T5 ficam suspensos e o T2 não precisa mais de notas.
+- **Regra 5:** o Chrome sem janela abre só a nossa página local; a proibição de automação de navegador vale para sites
+  e plataformas de terceiros.
+- **Originalidade (briefing):** seguimos a linguagem do formato, não a identidade dos perfis: personagens, paleta,
+  fonte, legendas e roteiros próprios; nada de copiar cenas, bordões ou chamadas para comentário deles.
+- **Medido (T6, 14/11):** 20,6 s de vídeo 1080×1920 a 30 fps renderizam em 32 s na GPU deste PC, 169 s só com CPU
+  (SwiftShader, 12 núcleos) e 81 s só com CPU em 720×1280. O runner do GitHub tem menos núcleos: medir antes de
+  aprovar.
+- **Consequências se aprovada:** `docs/01` (bancada visual e produção) e a arquitetura do `CLAUDE.md` mudam; a
+  `Factory.Media` ganha o renderizador; a skill de storyboard passa a escrever a cena; efeitos sonoros (CC0, com
+  licença registrada) entram junto com a voz. A duração (referências com 1:39–2:58; ADR-0012 diz 61–90 s) é
+  revista depois do primeiro episódio completo.
