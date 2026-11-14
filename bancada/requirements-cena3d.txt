@@ -1,0 +1,6 @@
+# Só o necessário para renderizar cenas 3D com som (T6), sem o rembg: usado no workflow "bancada" do GitHub.
+pillow==11.1.0
+imageio-ffmpeg==0.5.1
+playwright==1.64.1
+numpy==2.5.4
+scipy==1.18.1

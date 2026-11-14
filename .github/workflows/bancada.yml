@@ -1,0 +1,59 @@
+# Bancada (Fase 0): mede o render das cenas 3D (T6) no runner padrão do GitHub, só com CPU (SwiftShader).
+# Roda manualmente ou quando este arquivo muda. O resultado (JSONs de medição) vai para o ramo "medicoes",
+# de onde o Claude lê com git fetch; nenhum segredo é usado.
+name: bancada
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: [".github/workflows/bancada.yml"]
+
+concurrency:
+  group: bancada
+  cancel-in-progress: false
+
+jobs:
+  medir-render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write # só para gravar o resultado no ramo "medicoes"
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.13"
+      - name: Dependências
+        run: pip install -r bancada/requirements-cena3d.txt
+      - name: Máquina
+        run: |
+          mkdir -p /tmp/med
+          {
+            echo "nproc: $(nproc)"
+            lscpu | grep -E "Model name|^CPU\(s\)"
+            free -h | head -2
+            google-chrome --version
+          } | tee /tmp/med/maquina.txt
+      - name: Render 720x1280, 30 fps, só CPU
+        run: python -u bancada/cena3d/renderizar.py --cena polvo --gl swiftshader --largura 720 --altura 1280 --sufixo=-runner-720
+      - name: Render 1080x1920, 30 fps, só CPU
+        run: python -u bancada/cena3d/renderizar.py --cena polvo --gl swiftshader --sufixo=-runner-1080
+      - name: Gravar resultado no ramo "medicoes"
+        run: |
+          cp bancada/saida/t6/*-runner-*.json /tmp/med/
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git ls-remote --exit-code origin medicoes >/dev/null; then
+            git fetch --depth 1 origin medicoes && git switch medicoes
+          else
+            git switch --orphan medicoes
+          fi
+          mkdir -p "runner/$GITHUB_RUN_ID" && cp /tmp/med/* "runner/$GITHUB_RUN_ID/"
+          git add runner && git commit -m "medição do runner $GITHUB_RUN_ID" && git push origin medicoes
+          {
+            echo "### Render no runner"
+            for f in /tmp/med/*.json; do
+              python -c "import json,sys; d=json.load(open(sys.argv[1])); print(f\"- {d['resolucao']}: {d['ms_por_quadro']} ms/quadro, {d['render_s']} s para {d['duracao_video_s']} s de vídeo ({d['webgl_renderer']})\")" "$f"
+            done
+          } >> "$GITHUB_STEP_SUMMARY"
