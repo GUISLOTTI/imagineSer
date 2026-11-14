@@ -49,7 +49,11 @@ Não começar todo episódio com "Você é...". Variedade de estrutura é també
 - Repetição com variação: o mesmo som repetido muda um pouco de tom a cada vez (como as ventosas subindo).
 - Momentos de piada ou virada ganham som próprio e um respiro antes.
 - Origem: sons sintetizados pelo nosso código (`bancada/som/`) ou bibliotecas com licença registrada; volume final
-  normalizado (alvo inicial −16 LUFS) e a narração sempre por cima dos efeitos.
+  normalizado (alvo inicial −16 LUFS).
+- **A voz manda.** Enquanto a narração fala, efeitos e ambiente abaixam sozinhos (efeitos −6 dB, ambiente −9 dB,
+  começando 40 ms antes da palavra) e abrem espaço na faixa de 1–4 kHz, onde mora a clareza da fala (−5 dB). Voz no
+  centro; efeitos no lado onde está o objeto. Sons-chave caem na palavra que ilustram ou no respiro logo depois; o
+  roteiro deixa respiros curtos para os momentos de vitrine (ex.: as ventosas estourando depois de "ventosas").
 
 ## Regras factuais
 

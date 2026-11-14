@@ -138,6 +138,27 @@ do FFmpeg com alvo de −16 LUFS e medição pelo `ebur128`. Síntese e mixagem 
 a trilha. Resultado: −15,7 LUFS integrados. Conferido por espectrograma (`bancada/saida/som/polvo-espectro.png`):
 cada som no instante da ação. Catálogo para ouvir som por som: `bancada/saida/som/catalogo.mp4`.
 
+### 14/11/2026, sábado (Brasília) — Voz × efeitos (voz provisória do Windows)
+
+Pergunta do Gabriel: como os efeitos ficam neutros e não tiram a atenção do narrador? Método: legenda narrada pela
+voz "Microsoft Maria Desktop" (System.Speech, robótica, só para teste), mesma trilha de efeitos, duas mixagens:
+sem ajuste e com ajuste (ducking com 40 ms de antecipação: efeitos −6 dB, ambiente −9 dB; buraco de −5 dB em
+1–4 kHz nos efeitos enquanto a voz fala). Métrica: RMS da voz menos RMS do fundo nos trechos com fala.
+
+| Mixagem | Voz acima do fundo | Voz acima do fundo em 1–4 kHz | Arquivo (`bancada/saida/t6/`) |
+| --- | --- | --- | --- |
+| Sem ajuste | 7,3 dB | 0,3 dB (empate na faixa da fala) | `polvo-voz-sem-ajuste.mp4` |
+| Com ajuste | 13,5 dB | 8,6 dB | `polvo-voz.mp4` |
+
+Hipótese a validar com o ouvido do Gabriel: com ajuste, a fala fica clara sem os efeitos sumirem.
+
+### 14/11/2026 — Plano Pro: produção, não só desenvolvimento
+
+O Pro é o motor da produção (roteiro, fontes, cena 3D em código e lista de sons de cada episódio rodam pelo token
+do Pro no GitHub Actions), então cancelá-lo depois do desenvolvimento para a fábrica. O uso vem em janelas de sessão
+e semanais que renovam ([doc oficial](https://code.claude.com/docs/en/costs), lida em 14/11); não dá para guardar
+sobra nem trocar por outro serviço. Consumo por episódio: medir com `/usage` no episódio feito à mão.
+
 ## Lições
 
 | Data | Lição | Origem | Virou regra em |

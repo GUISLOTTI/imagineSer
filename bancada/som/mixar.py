@@ -30,9 +30,53 @@ def _posicionar(x: np.ndarray, pan: float) -> np.ndarray:
     return np.stack([x * np.cos(ang), x * np.sin(ang)], axis=1)
 
 
-def mixar(eventos: list[dict], duracao: float, destino: Path) -> dict:
+# ---------------- a voz manda (ADR-0018) ----------------
+# Quando a narração fala, os efeitos abaixam (ducking) e abrem um "buraco" na faixa de presença da fala (~1–4 kHz),
+# onde mora a inteligibilidade. Ambiente abaixa mais que os efeitos. Tudo com 40 ms de antecipação: como a mixagem
+# é feita depois, dá para baixar os efeitos um instante ANTES de a palavra começar.
+DUCK_EFEITOS_DB = 6.0
+DUCK_AMBIENTE_DB = 9.0
+BURACO_FALA_DB = 5.0
+VOZ_RMS = 0.1          # fala normalizada a −20 dBFS RMS (antes do loudnorm final)
+HOP = 256
+
+
+def _atividade_voz(voz: np.ndarray) -> np.ndarray:
+    """0 = silêncio, 1 = falando, por bloco de HOP amostras; sobe rápido, desce em ~300 ms, antecipa 40 ms."""
+    n = len(voz) // HOP
+    rms = np.sqrt(np.mean(voz[: n * HOP].reshape(n, HOP) ** 2, axis=1) + 1e-12)
+    db = 20 * np.log10(rms / (rms.max() + 1e-12))
+    alvo = np.clip((db + 40) / 15, 0, 1)
+    sobe, desce = 1 - np.exp(-1 / 2), 1 - np.exp(-1 / (0.3 * SR / HOP))
+    saida, v = np.zeros_like(alvo), 0.0
+    for i, x in enumerate(alvo):
+        v += (x - v) * (sobe if x > v else desce)
+        saida[i] = v
+    k = int(0.04 * SR / HOP)
+    return np.concatenate([saida[k:], np.full(k, saida[-1])])
+
+
+def _abrir_espaco(bus: np.ndarray, atividade: np.ndarray, duck_db: float, buraco_db: float) -> np.ndarray:
+    saida = np.zeros_like(bus)
+    for c in range(bus.shape[1]):
+        f, tt, Z = signal.stft(bus[:, c], SR, nperseg=1024, noverlap=1024 - HOP)
+        presenca = np.exp(-0.5 * (np.log2(np.maximum(f, 1) / 2000) / 0.7) ** 2)[:, None]
+        a = atividade[np.clip(np.round(tt * SR / HOP).astype(int), 0, len(atividade) - 1)][None, :]
+        Z *= 10 ** ((-duck_db * a - buraco_db * a * presenca) / 20)
+        _, y = signal.istft(Z, SR, nperseg=1024, noverlap=1024 - HOP)
+        saida[: min(len(y), len(bus)), c] = y[: len(bus)]
+    return saida
+
+
+def _rms_db(x: np.ndarray, mascara: np.ndarray) -> float:
+    return float(10 * np.log10(np.mean(x[mascara] ** 2) + 1e-12))
+
+
+def mixar(eventos: list[dict], duracao: float, destino: Path, voz: np.ndarray | None = None,
+          ajustar: bool = True) -> dict:
     n = int((duracao + 1.0) * SR)
-    mix = np.zeros((n, 2), dtype=np.float64)
+    efeitos = np.zeros((n, 2), dtype=np.float64)
+    ambiente = np.zeros((n, 2), dtype=np.float64)
     cache: dict[str, np.ndarray] = {}
     for e in eventos:
         params = {k: v for k, v in e.items() if k not in CHAVES_DO_EVENTO}
@@ -45,16 +89,39 @@ def mixar(eventos: list[dict], duracao: float, destino: Path) -> dict:
         if ini >= n:
             continue
         fim = min(n, ini + len(x))
-        mix[ini:fim] += x[: fim - ini] * ganho
-    mix = mix[: int(duracao * SR)]
+        (ambiente if e["som"] == "ambiente" else efeitos)[ini:fim] += x[: fim - ini] * ganho
+    m = int(duracao * SR)
+    efeitos, ambiente = efeitos[:m], ambiente[:m]
+    info: dict = {"eventos": len(eventos), "sons_distintos": len(cache)}
+
+    if voz is not None:
+        voz = np.pad(voz, (0, max(0, m - len(voz))))[:m].astype(np.float64)
+        voz = signal.sosfilt(signal.butter(2, 80, btype="high", fs=SR, output="sos"), voz)
+        atividade = _atividade_voz(voz)
+        falando = np.repeat(atividade > 0.5, HOP)[:m]
+        falando = np.pad(falando, (0, m - len(falando)))
+        voz *= VOZ_RMS / np.sqrt(np.mean(voz[falando] ** 2) + 1e-12)
+        if ajustar:
+            efeitos = _abrir_espaco(efeitos, atividade, DUCK_EFEITOS_DB, BURACO_FALA_DB)
+            ambiente = _abrir_espaco(ambiente, atividade, DUCK_AMBIENTE_DB, BURACO_FALA_DB)
+        fundo = efeitos + ambiente
+        # métrica: quanto a voz fica acima de tudo o resto enquanto fala (e só na faixa de presença)
+        presenca = lambda x: signal.sosfilt(signal.butter(4, [1000, 4000], btype="band", fs=SR, output="sos"), x, axis=0)
+        info["voz_acima_do_fundo_db"] = round(_rms_db(voz, falando) - _rms_db(fundo.mean(axis=1), falando), 1)
+        info["voz_acima_do_fundo_1a4khz_db"] = round(
+            _rms_db(presenca(voz), falando) - _rms_db(presenca(fundo.mean(axis=1)), falando), 1)
+        info["ajuste_voz"] = ajustar
+        mix = fundo + voz[:, None]
+    else:
+        mix = efeitos + ambiente
     # corta o subgrave (< 40 Hz): ninguém ouve no celular e ele rouba volume da mixagem
     mix = signal.sosfilt(signal.butter(2, 40, btype="high", fs=SR, output="sos"), mix, axis=0)
-    pico = float(np.abs(mix).max())
+    info["pico_antes_do_limitador"] = round(float(np.abs(mix).max()), 3)
     # limitador suave: só age perto do teto, sem cortar picos secos
     mix = np.where(np.abs(mix) > 0.7, np.sign(mix) * (0.7 + 0.25 * np.tanh((np.abs(mix) - 0.7) / 0.25)), mix)
     destino.parent.mkdir(parents=True, exist_ok=True)
     wavfile.write(destino, SR, (mix * 32767).astype(np.int16))
-    return {"eventos": len(eventos), "sons_distintos": len(cache), "pico_antes_do_limitador": round(pico, 3)}
+    return info
 
 
 def catalogo() -> Path:

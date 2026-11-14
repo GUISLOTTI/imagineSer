@@ -38,6 +38,7 @@ from playwright.sync_api import sync_playwright
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "som"))
 import mixar  # noqa: E402
+import voz_provisoria  # noqa: E402
 
 sys.stdout.reconfigure(encoding="utf-8")
 sys.stderr.reconfigure(encoding="utf-8")
@@ -74,10 +75,14 @@ def argumentos_gl(modo: str) -> list[str]:
     return ["--enable-gpu", "--ignore-gpu-blocklist"]
 
 
-def juntar_som(video: Path, destino: Path, eventos: list[dict], duracao: float, lufs: float) -> dict:
-    """Sintetiza a trilha, normaliza o volume (EBU R128) e junta ao vídeo sem recodificar a imagem."""
+def juntar_som(video: Path, destino: Path, eventos: list[dict], duracao: float, lufs: float,
+               narracao: list[dict] | None = None, ajustar: bool = True) -> dict:
+    """Sintetiza a trilha (e a voz provisória, se pedida), normaliza (EBU R128) e junta ao vídeo."""
     wav = destino.with_suffix(".wav")
-    info = mixar.mixar(eventos, duracao, wav)
+    voz, fala = (voz_provisoria.sintetizar(narracao, duracao) if narracao else (None, None))
+    info = mixar.mixar(eventos, duracao, wav, voz=voz, ajustar=ajustar)
+    if fala:
+        info["voz_provisoria"] = {"voz": voz_provisoria.VOZ, "trechos": fala}
     subprocess.run(
         [imageio_ffmpeg.get_ffmpeg_exe(), "-y", "-loglevel", "error", "-i", str(video), "-i", str(wav),
          "-map", "0:v", "-map", "1:a", "-c:v", "copy", "-af", f"loudnorm=I={lufs}:TP=-1.5:LRA=11",
@@ -113,6 +118,8 @@ def main() -> None:
     ap.add_argument("--sem-som", action="store_true")
     ap.add_argument("--so-som", action="store_true", help="reaproveita <cena>-video.mp4 e refaz só a trilha")
     ap.add_argument("--lufs", type=float, default=-16.0)
+    ap.add_argument("--voz-provisoria", action="store_true", help="narra a legenda com a voz do Windows (teste de mixagem)")
+    ap.add_argument("--sem-ajuste", action="store_true", help="com voz, desliga o ducking e o buraco na faixa da fala")
     a = ap.parse_args()
     if a.rascunho:
         a.largura, a.altura, a.fps = 540, 960, 15
@@ -146,6 +153,7 @@ def main() -> None:
 
         nome = f"{a.cena}{a.sufixo}"
         eventos = [] if a.sem_som else pagina.evaluate("window.cena.sons ? window.cena.sons() : []")
+        narracao = pagina.evaluate("window.cena.narracao || null") if a.voz_provisoria else None
         if a.quadros:
             instantes = [float(x) for x in a.quadros.split(",")]
             imgs = [Image.open(io.BytesIO(quadro(t, "png"))).convert("RGB") for t in instantes]
@@ -167,6 +175,8 @@ def main() -> None:
         destino = SAIDA / f"{nome}.mp4"
         so_video = SAIDA / f"{nome}-video.mp4"
         if a.so_som and not so_video.exists():
+            so_video = SAIDA / f"{a.cena}-video.mp4"  # variante de som sobre o vídeo-base da cena
+        if a.so_som and not so_video.exists():
             raise SystemExit(f"--so-som precisa de {so_video.name}; renderize o vídeo antes")
         ff = None if a.so_som else subprocess.Popen(
             [imageio_ffmpeg.get_ffmpeg_exe(), "-y", "-loglevel", "error", "-f", "image2pipe", "-framerate", str(a.fps),
@@ -187,8 +197,8 @@ def main() -> None:
         navegador.close()
     httpd.shutdown()
 
-    som = juntar_som(so_video, destino, eventos, fim, a.lufs) if eventos else None
-    if not eventos:
+    som = juntar_som(so_video, destino, eventos, fim, a.lufs, narracao, not a.sem_ajuste) if eventos else None
+    if not eventos and not a.so_som:
         so_video.replace(destino)
 
     medicao = {
@@ -202,7 +212,8 @@ def main() -> None:
         "som": som,
     }
     if a.so_som:
-        anterior = json.loads(destino.with_suffix(".json").read_text(encoding="utf-8"))
+        base = destino.with_suffix(".json") if destino.with_suffix(".json").exists() else SAIDA / f"{a.cena}.json"
+        anterior = {**json.loads(base.read_text(encoding="utf-8")), "arquivo": destino.name}
         medicao = {**anterior, "som": som}
     destino.with_suffix(".json").write_text(json.dumps(medicao, ensure_ascii=False, indent=2), encoding="utf-8")
     if a.so_som:

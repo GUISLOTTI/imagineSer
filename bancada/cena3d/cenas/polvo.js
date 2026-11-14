@@ -264,14 +264,15 @@ export async function criar({ largura, altura }) {
   ]);
 
   // ---------------- texto e etiquetas ----------------
-  hud.legenda([
+  const NARRACAO = [
     { ini: 0.3, fim: 2.3, texto: 'Imagine ser um polvo.', destaque: ['polvo'] },
     { ini: 3.0, fim: 5.3, texto: 'Oito braços,', destaque: ['Oito'] },
     { ini: 5.6, fim: 8.6, texto: 'e cada um cheio de ventosas.', destaque: ['ventosas'] },
     { ini: 9.4, fim: 12.2, texto: 'Mas o seu melhor truque é outro:', destaque: ['truque'] },
     { ini: 12.6, fim: 15.2, texto: 'você muda de cor', destaque: ['cor'] },
     { ini: 15.6, fim: 18.4, texto: 'e some na frente de todo mundo.', destaque: ['some'] },
-  ]);
+  ];
+  hud.legenda(NARRACAO);
   const inicioBraco = b => 3.0 + b.ordem * 0.27;
   bracos.forEach((b, i) => hud.etiqueta({
     estilo: 'numero', texto: String(b.ordem + 1), ini: inicioBraco(b) + 0.75, fim: 5.9,
@@ -416,6 +417,7 @@ export async function criar({ largura, altura }) {
     canvas: palco.saida,
     info: () => palco.info(),
     sons: () => palco.mapearSons(atualizar, sons),
+    narracao: NARRACAO,
     quadro: (t, formato = 'jpeg') => palco.quadro(t, atualizar, DURACAO, formato),
   };
 }

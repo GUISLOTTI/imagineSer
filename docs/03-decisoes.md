@@ -198,5 +198,7 @@ consequências. Para mudar uma decisão aceita, crie um ADR novo que a substitua
 - **Origem dos sons:** começamos com síntese própria (`bancada/som/sintese.py`, osciladores, ruído e filtros com
   semente fixa), que é original por construção. Uma biblioteca de terceiros só entra com licença verificada na
   página oficial e registrada, e só se um teste mostrar que soa melhor (ADR-0015).
+- **A voz manda:** com narração, a mixagem abaixa efeitos e ambiente enquanto a voz fala e abre espaço na faixa de
+  1–4 kHz (medido em 14/11 com voz provisória: a voz passou de 0,3 dB para 8,6 dB acima do fundo nessa faixa).
 - **Consequências:** a skill de cena passa a escrever também a lista de sons; o catálogo de sons cresce como o kit
-  visual; quando houver voz, os efeitos ficam abaixo dela.
+  visual.

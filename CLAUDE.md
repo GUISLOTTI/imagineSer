@@ -109,9 +109,11 @@ Repositório: `github.com/GUISLOTTI/imagineSer` (privado). Estado das contas em 
 
 1. Formato visual = animação 3D feita por código (ADR-0017, Proposta; referências analisadas em `docs/08`).
    Protótipo T6 "polvo" (`bancada/saida/t6/polvo.mp4`): o Gabriel viu no sábado 14/11 e mandou seguir. Trilha de
-   efeitos sintetizados pronta no mesmo dia (ADR-0018); aguardando o Gabriel ouvir. Depois: medir o render no
+   efeitos sintetizados pronta no mesmo dia (ADR-0018) e mixagem "a voz manda" testada com voz provisória
+   (`polvo-voz.mp4` × `polvo-voz-sem-ajuste.mp4`); aguardando o Gabriel ouvir. Depois: medir o render no
    runner do GitHub (workflow de bancada) e legenda sincronizada pela voz. T3–T5 suspensos; o T2 não precisa de notas.
 2. Gabriel: conectar o YouTube ao Buffer quando o canal tiver o @ (Claude lembra).
 3. Claude: 5 vozes Chirp 3 HD para o Gabriel ouvir (aí entra o Google Cloud, com cartão).
-4. Claude: um episódio feito à mão (cena 3D + voz) com rascunhos das skills; Gabriel aprova ou nega.
+4. Claude: um episódio feito à mão (cena 3D + voz) com rascunhos das skills; Gabriel aprova ou nega. Medir o
+   consumo do Pro por episódio (`/usage`) para saber quanta folga sobra para qualidade.
 5. ADRs de visual e voz com números medidos → Fase 1: solução .NET, schemas e skills definitivas (`docs/01` §10).
