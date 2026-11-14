@@ -378,10 +378,44 @@ export async function criar({ largura, altura }) {
     }
   }
 
+  // ---------------- som (ADR-0018): cada ação importante tem um som-chave ----------------
+  // Os instantes saem das mesmas funções da animação, então som e imagem não se desencontram.
+  const pontaBraco = b => () => _w.copy(b.pontos[NP - 1]).applyMatrix4(corpo.matrixWorld);
+  const centroPolvo = () => _topo.set(0, 0.9, 0);
+  const sons = [
+    { t: 0, som: 'ambiente', dur: DURACAO },
+    { t: 0.05, som: 'whoosh', dur: 2.4, grave: true, vol: -3 },                        // câmera descendo
+    { t: 1.82, som: 'pop_grande', ancora: centroPolvo },                               // polvo acorda
+    { t: 2.15, som: 'bolhas', n: 11, dur: 0.6, ancora: centroPolvo },
+    { t: 2.47, som: 'impacto', vol: -4, ancora: centroPolvo },
+    { t: 2.7, som: 'piscar', vol: -5, ancora: centroPolvo },
+    { t: 9.3, som: 'piscar', vol: -5, ancora: centroPolvo },
+    ...bracos.flatMap(b => [
+      { t: inicioBraco(b) + 0.04, som: 'esticar', semente: b.ordem, tom: 0.9 + b.ordem * 0.035, ancora: pontaBraco(b) },
+      { t: inicioBraco(b) + 0.75, som: 'tique', nota: b.ordem, ancora: pontaBraco(b) },  // contagem sobe na escala
+    ]),
+    { t: 5.6, som: 'plim' },                                                           // "8 BRAÇOS"
+    { t: 5.95, som: 'whoosh', dur: 1.0, pan_ini: -0.3, pan_fim: 0.5, vol: -4 },
+    ...Array.from({ length: NV }, (_, j) => ({                                         // ventosas saltando
+      t: 6.3 + j * 0.09, som: 'ventosa', semente: j, tom: 0.82 + j * 0.035, vol: j === NV - 1 ? 1 : -1,
+      ancora: () => _w.copy(bracos[ACENO].pontos[Math.round((0.28 + 0.64 * j / (NV - 1)) * (NP - 1))]).applyMatrix4(corpo.matrixWorld),
+    })),
+    { t: 7.4, som: 'pop' },                                                            // "VENTOSAS"
+    ...[9.78, 9.97, 10.13].map((t, k) => ({ t, som: 'ventosa', gruda: true, semente: 20 + k, tom: 0.92 + 0.05 * k, ancora: pontaBraco(bracos[ACENO]) })),
+    { t: 10.3, som: 'whoosh', dur: 1.7, grave: true, pan_ini: 0.3, pan_fim: -0.1, vol: -5 }, // câmera recua
+    { t: 12.85, som: 'camuflagem', dur: 1.9 },
+    { t: 13.3, som: 'pop', tom: 0.9 },                                                 // "CAMUFLAGEM"
+    { t: 15.85, som: 'nadar', dur: 1.7, pan_ini: 0.85, pan_fim: 0.25 },                // peixe chega
+    { t: 17.88, som: 'pergunta', ancora: () => peixe.position },                       // "?"
+    { t: 18.75, som: 'piscar', vol: 1, ancora: centroPolvo },                          // a piada: só os olhos piscam
+    { t: 19.2, som: 'nadar', dur: 1.35, tom: 1.15, pan_ini: 0.25, pan_fim: -0.9 },     // peixe vai embora
+  ];
+
   return {
     duracao: DURACAO,
     canvas: palco.saida,
     info: () => palco.info(),
+    sons: () => palco.mapearSons(atualizar, sons),
     quadro: (t, formato = 'jpeg') => palco.quadro(t, atualizar, DURACAO, formato),
   };
 }

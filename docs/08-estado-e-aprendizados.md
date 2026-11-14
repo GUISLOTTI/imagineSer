@@ -128,6 +128,16 @@ x264 crf 18. Vídeo de 20,6 s, 30 fps, sem voz. Arquivo: `bancada/saida/t6/polvo
 
 O runner padrão do GitHub tem menos núcleos que este PC: a medição de verdade fica para o workflow de bancada.
 
+O Gabriel viu o protótipo (14/11) e mandou seguir. Pediu efeitos sonoros caprichados como regra (ADR-0018) e
+confirmou a duração de 61–90 s.
+
+### 14/11/2026, sábado (Brasília) — Trilha de efeitos do polvo
+
+Método: 15 sons sintetizados (`bancada/som/sintese.py`), 47 eventos na cena, mixagem em 48 kHz estéreo, `loudnorm`
+do FFmpeg com alvo de −16 LUFS e medição pelo `ebur128`. Síntese e mixagem levam menos de 5 s; `--so-som` refaz só
+a trilha. Resultado: −15,7 LUFS integrados. Conferido por espectrograma (`bancada/saida/som/polvo-espectro.png`):
+cada som no instante da ação. Catálogo para ouvir som por som: `bancada/saida/som/catalogo.mp4`.
+
 ## Lições
 
 | Data | Lição | Origem | Virou regra em |
@@ -147,3 +157,5 @@ O runner padrão do GitHub tem menos núcleos que este PC: a medição de verdad
 | 14/11/2026 | Montei a bancada para imagens paradas com câmera (o briefing sugeria a abordagem híbrida), mas o Gabriel queria animação 3D de verdade. Antes de testar um formato, analisar as referências quadro a quadro | Correção do Gabriel | `.claude/rules/bancada.md` |
 | 14/11/2026 | Tarefa em segundo plano morre quando a sessão fecha (o T3 agendado para 09/11 não rodou) | Agendamento de 09/11 | Agendar só por workflow (Fase 1) ou rodar com o Gabriel presente |
 | 14/11/2026 | No Three.js, `#include` de shader precisa de linha própria; em linha única o shader não compila | T6 | — |
+| 14/11/2026 | A primeira versão do ambiente era quase só subgrave (< 80 Hz), que alto-falante de celular não reproduz; o espectrograma mostrou. Ambiente agora em 110–600 Hz e corte abaixo de 40 Hz na mixagem | Trilha do polvo | `.claude/rules/bancada.md` (conferir espectrograma) |
+| 14/11/2026 | Som que termina cortado vira clique (o "plim" tinha um); toda síntese ganha rampa final de 15 ms | Trilha do polvo | `bancada/som/sintese.py` (`gerar`) |

@@ -162,6 +162,22 @@ export class Palco {
     return { renderer: ext ? gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER), three: THREE.REVISION };
   }
 
+  /** Eventos de som com `ancora` ganham pan pela posição do objeto na tela naquele instante. */
+  mapearSons(atualizar, eventos) {
+    const v = new THREE.Vector3();
+    return eventos
+      .map(({ ancora, ...e }) => {
+        if (ancora) {
+          atualizar(e.t);
+          this.camera.updateMatrixWorld();
+          v.copy(ancora()).project(this.camera);
+          e.pan = Math.round(clamp(v.x * 0.8, -0.9, 0.9) * 100) / 100;
+        }
+        return e;
+      })
+      .sort((a, b) => a.t - b.t);
+  }
+
   /** Desenha o quadro do instante t e devolve a imagem (data URL). */
   quadro(t, atualizar, duracao, formato = 'jpeg') {
     atualizar(t);

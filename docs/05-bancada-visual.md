@@ -96,13 +96,17 @@ Definição exata em `bancada/configs.json`; prompts em `bancada/prompts.json`; 
   FFmpeg. O servidor local só serve `bancada/cena3d/` e `assets-marca/fontes/`.
 - **Passa:** (a) o Gabriel acha o visual no nível das referências; (b) no runner do GitHub, um episódio de 150 s
   renderiza em menos de 30 min (720p ou 1080p); (c) mesmo `t` gera o mesmo quadro.
-- Protótipo: `polvo` (20,6 s, texto de teste, sem voz). Próximos: voz e efeitos sonoros, legenda sincronizada pela
-  voz, medição no runner.
+- Protótipo: `polvo` (20,6 s, texto de teste, sem voz). O Gabriel viu em 14/11 e mandou seguir.
+- Som (ADR-0018): a cena lista eventos (`sons`) com os instantes da animação; `bancada/som/sintese.py` gera cada
+  efeito e `bancada/som/mixar.py` mixa; o FFmpeg normaliza (EBU R128, −16 LUFS) e junta ao vídeo. Conferência sem
+  ouvir: espectrograma da trilha (`showspectrumpic`). `mixar.py catalogo` gera um vídeo com cada som e o nome.
+- Próximos: medição no runner, voz e legenda sincronizada pela voz.
 
 ## Como rodar
 
 T6: `bancada/.venv/Scripts/python bancada/cena3d/renderizar.py --cena polvo` (opções: `--rascunho` 540×960 a 15 fps,
-`--gl swiftshader` só CPU como no runner, `--quadros 0,5,10` só uma folha de quadros PNG). Saída em
+`--gl swiftshader` só CPU como no runner, `--quadros 0,5,10` só uma folha de quadros PNG, `--so-som` refaz só a
+trilha, `--sem-som`). Saída em
 `bancada/saida/t6/` com um `.json` de medição ao lado.
 
 

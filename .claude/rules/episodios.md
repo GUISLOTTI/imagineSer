@@ -17,3 +17,5 @@ paths:
 - Nunca edite `video.json`, `publicacoes.json` ou hashes à mão; só a `Factory.Cli` escreve neles.
 - Duração (ADR-0012): padrão 61–90 s (alvo 62–75 s); fora disso só com justificativa no PR; teto absoluto 120 s.
 - Corpo humano: abordagem educativa geral, sem diagnóstico ou recomendação individual; aviso fixo na descrição.
+- Som (ADR-0018): toda ação importante na tela tem um som-chave sincronizado; ambiente contínuo, sem música; detalhes
+  em `docs/04` (Imagem e som).

@@ -25,3 +25,5 @@ paths:
   folha de quadros) e registrar em `docs/08`.
 - Cenas 3D (T6): tudo em função do tempo `t` (nada de relógio nem `Math.random` sem semente); conferir uma folha de
   quadros (`--quadros`) antes de renderizar o vídeo inteiro.
+- Som: o Claude não ouve; antes de mandar, conferir o espectrograma da trilha (sons nos instantes certos, sem clique
+  no fim, energia entre 100 Hz e 8 kHz, que é o que o celular reproduz).

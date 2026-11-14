@@ -164,7 +164,7 @@ consequências. Para mudar uma decisão aceita, crie um ADR novo que a substitua
 - **Consequências:** nada muda no MVP.
 
 ## ADR-0017 — Linguagem visual: animação 3D feita por código
-- **Data:** 2026-11-14 · **Status:** Proposta (falta: o Gabriel aprovar o visual do protótipo e medir o render no
+- **Data:** 2026-11-14 · **Status:** Proposta (o Gabriel viu o protótipo em 14/11 e mandou seguir; falta medir o render no
   runner do GitHub)
 - **Contexto:** o Gabriel quer vídeos animados, não imagens paradas com câmera, e mandou três referências do formato
   (análise em `docs/08`). Elas são cenas 3D low-poly montadas e animadas por código: câmera contínua (a da caneta tem
@@ -185,5 +185,18 @@ consequências. Para mudar uma decisão aceita, crie um ADR novo que a substitua
   aprovar.
 - **Consequências se aprovada:** `docs/01` (bancada visual e produção) e a arquitetura do `CLAUDE.md` mudam; a
   `Factory.Media` ganha o renderizador; a skill de storyboard passa a escrever a cena; efeitos sonoros (CC0, com
-  licença registrada) entram junto com a voz. A duração (referências com 1:39–2:58; ADR-0012 diz 61–90 s) é
-  revista depois do primeiro episódio completo.
+  licença registrada) entram junto com a voz. A duração continua 61–90 s
+  (confirmada pelo Gabriel em 14/11; ADR-0012), embora as referências tenham 1:39–2:58.
+
+## ADR-0018 — Efeitos sonoros caprichados fazem parte do formato
+- **Data:** 2026-11-14 · **Status:** Aceita (decisão do Gabriel)
+- **Contexto:** o Gabriel viu o protótipo do polvo e pediu para caprichar nos efeitos: sons-chave, como o da
+  ventosa, prendem o público. Ele também confirmou a duração de 61–90 s (ADR-0012 continua valendo).
+- **Decisão:** toda ação importante na tela tem um som-chave sincronizado ao quadro, sobre um ambiente contínuo;
+  sem música (regra 7). A cena lista os eventos de som com os mesmos instantes da animação, e a mixagem é feita
+  pelo nosso código. Regras de uso em `docs/04` (Imagem e som).
+- **Origem dos sons:** começamos com síntese própria (`bancada/som/sintese.py`, osciladores, ruído e filtros com
+  semente fixa), que é original por construção. Uma biblioteca de terceiros só entra com licença verificada na
+  página oficial e registrada, e só se um teste mostrar que soa melhor (ADR-0015).
+- **Consequências:** a skill de cena passa a escrever também a lista de sons; o catálogo de sons cresce como o kit
+  visual; quando houver voz, os efeitos ficam abaixo dela.

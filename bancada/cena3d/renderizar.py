@@ -9,8 +9,11 @@ Uso:
   python bancada/cena3d/renderizar.py --cena polvo --rascunho           # 540x960, 15 fps
   python bancada/cena3d/renderizar.py --cena polvo --gl swiftshader     # sem GPU (como no runner do GitHub)
   python bancada/cena3d/renderizar.py --cena polvo --quadros 0,2.4,7.8  # só alguns quadros, numa folha PNG
+  python bancada/cena3d/renderizar.py --cena polvo --so-som             # refaz só a trilha (reaproveita o vídeo)
 
 Saídas em bancada/saida/t6/ (fora do Git): <cena>[-sufixo].mp4 + .json (medição e proveniência) + folha de quadros.
+Som: a cena lista eventos (window.cena.sons()); bancada/som/mixar.py sintetiza e mixa; o FFmpeg normaliza o volume
+(EBU R128, alvo -16 LUFS) e junta ao vídeo.
 O servidor local só entrega bancada/cena3d/ e assets-marca/fontes/ (nunca a raiz do repositório).
 """
 from __future__ import annotations
@@ -32,6 +35,9 @@ from pathlib import Path
 import imageio_ffmpeg
 from PIL import Image
 from playwright.sync_api import sync_playwright
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "som"))
+import mixar  # noqa: E402
 
 sys.stdout.reconfigure(encoding="utf-8")
 sys.stderr.reconfigure(encoding="utf-8")
@@ -68,6 +74,31 @@ def argumentos_gl(modo: str) -> list[str]:
     return ["--enable-gpu", "--ignore-gpu-blocklist"]
 
 
+def juntar_som(video: Path, destino: Path, eventos: list[dict], duracao: float, lufs: float) -> dict:
+    """Sintetiza a trilha, normaliza o volume (EBU R128) e junta ao vídeo sem recodificar a imagem."""
+    wav = destino.with_suffix(".wav")
+    info = mixar.mixar(eventos, duracao, wav)
+    subprocess.run(
+        [imageio_ffmpeg.get_ffmpeg_exe(), "-y", "-loglevel", "error", "-i", str(video), "-i", str(wav),
+         "-map", "0:v", "-map", "1:a", "-c:v", "copy", "-af", f"loudnorm=I={lufs}:TP=-1.5:LRA=11",
+         "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-shortest", "-movflags", "+faststart", str(destino)],
+        check=True,
+    )
+    medida = subprocess.run(
+        [imageio_ffmpeg.get_ffmpeg_exe(), "-hide_banner", "-i", str(destino), "-map", "0:a", "-af", "ebur128",
+         "-f", "null", "-"], capture_output=True, text=True, encoding="utf-8", errors="replace",
+    ).stderr
+    resumo = medida[medida.rfind("Summary:"):]
+    for linha in resumo.splitlines():
+        partes = linha.split()
+        if partes[:1] == ["I:"]:
+            info["lufs_integrado"] = float(partes[1])
+        if partes[:1] == ["Peak:"]:
+            info["pico_dbfs"] = float(partes[1])
+    info["proveniencia"] = "sintetizado por bancada/som/sintese.py (sem material de terceiros)"
+    return info
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--cena", default="polvo")
@@ -79,6 +110,9 @@ def main() -> None:
     ap.add_argument("--quadros", help="instantes em segundos separados por vírgula; gera só uma folha PNG")
     ap.add_argument("--ate", type=float, help="renderiza só até este instante (s)")
     ap.add_argument("--sufixo", default="")
+    ap.add_argument("--sem-som", action="store_true")
+    ap.add_argument("--so-som", action="store_true", help="reaproveita <cena>-video.mp4 e refaz só a trilha")
+    ap.add_argument("--lufs", type=float, default=-16.0)
     a = ap.parse_args()
     if a.rascunho:
         a.largura, a.altura, a.fps = 540, 960, 15
@@ -111,6 +145,7 @@ def main() -> None:
             return base64.b64decode(dado.split(",", 1)[1])
 
         nome = f"{a.cena}{a.sufixo}"
+        eventos = [] if a.sem_som else pagina.evaluate("window.cena.sons ? window.cena.sons() : []")
         if a.quadros:
             instantes = [float(x) for x in a.quadros.split(",")]
             imgs = [Image.open(io.BytesIO(quadro(t, "png"))).convert("RGB") for t in instantes]
@@ -130,23 +165,31 @@ def main() -> None:
         fim = min(duracao, a.ate) if a.ate else duracao
         total = int(round(fim * a.fps))
         destino = SAIDA / f"{nome}.mp4"
-        ff = subprocess.Popen(
+        so_video = SAIDA / f"{nome}-video.mp4"
+        if a.so_som and not so_video.exists():
+            raise SystemExit(f"--so-som precisa de {so_video.name}; renderize o vídeo antes")
+        ff = None if a.so_som else subprocess.Popen(
             [imageio_ffmpeg.get_ffmpeg_exe(), "-y", "-loglevel", "error", "-f", "image2pipe", "-framerate", str(a.fps),
              "-c:v", "mjpeg", "-i", "-", "-c:v", "libx264", "-preset", "medium", "-crf", "18", "-pix_fmt", "yuv420p",
-             "-movflags", "+faststart", str(destino)],
+             "-movflags", "+faststart", str(so_video)],
             stdin=subprocess.PIPE,
         )
         t_render = time.perf_counter()
-        for i in range(total):
+        for i in range(0 if a.so_som else total):
             ff.stdin.write(quadro(i / a.fps))
             if i % (a.fps * 2) == 0:
                 passado = time.perf_counter() - t_render
                 print(f"\r  quadro {i}/{total} · {passado / max(1, i) * 1000:.0f} ms/quadro", end="", flush=True)
-        ff.stdin.close()
-        ff.wait()
+        if ff:
+            ff.stdin.close()
+            ff.wait()
         render = time.perf_counter() - t_render
         navegador.close()
     httpd.shutdown()
+
+    som = juntar_som(so_video, destino, eventos, fim, a.lufs) if eventos else None
+    if not eventos:
+        so_video.replace(destino)
 
     medicao = {
         "cena": a.cena, "data_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -156,10 +199,17 @@ def main() -> None:
         "maquina": platform.platform(), "arquivo": destino.name,
         "proveniencia": "cena procedural (código em bancada/cena3d), sem modelo generativo; Three.js MIT; fonte Lilita One OFL",
         "avisos_navegador": list(dict.fromkeys(erros))[:20],
+        "som": som,
     }
+    if a.so_som:
+        anterior = json.loads(destino.with_suffix(".json").read_text(encoding="utf-8"))
+        medicao = {**anterior, "som": som}
     destino.with_suffix(".json").write_text(json.dumps(medicao, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(f"\n{destino.name}: {render:.1f} s de render para {total / a.fps:.1f} s de vídeo "
-          f"({medicao['ms_por_quadro']} ms/quadro, preparo {preparo:.1f} s)")
+    if a.so_som:
+        print(f"\n{destino.name}: trilha refeita ({som['eventos']} eventos, {som.get('lufs_integrado')} LUFS)")
+    else:
+        print(f"\n{destino.name}: {render:.1f} s de render para {total / a.fps:.1f} s de vídeo "
+              f"({medicao['ms_por_quadro']} ms/quadro, preparo {preparo:.1f} s)")
     if erros:
         print("avisos do navegador:\n  " + "\n  ".join(medicao["avisos_navegador"]), file=sys.stderr)
 

@@ -38,6 +38,19 @@ Não começar todo episódio com "Você é...". Variedade de estrutura é també
 4. **Virada:** o fato mais surpreendente, guardado para o fim.
 5. **Fechamento:** uma frase que amarra; convite leve (sem pedir like de forma genérica).
 
+## Imagem e som (ADR-0017 e ADR-0018)
+
+- **Animação 3D feita por código**, câmera sempre em movimento; cada frase da narração tem uma ação na tela (algo
+  aparece, se monta, muda ou reage). Etiquetas presas aos objetos e legenda grande palavra a palavra.
+- **Som caprichado é regra (decisão do Gabriel, 14/11/2026):** toda ação importante na tela tem um **som-chave**
+  sincronizado ao quadro (ventosa grudando, bolha, pop de etiqueta, whoosh de câmera, nota de contagem subindo na
+  escala). Sons-chave são o que prende o público: capriche neles antes de qualquer outro detalhe.
+- Fundo contínuo de ambiente (mar, floresta, corpo, espaço), baixo e sem silêncio morto; nada de música (regra 7).
+- Repetição com variação: o mesmo som repetido muda um pouco de tom a cada vez (como as ventosas subindo).
+- Momentos de piada ou virada ganham som próprio e um respiro antes.
+- Origem: sons sintetizados pelo nosso código (`bancada/som/`) ou bibliotecas com licença registrada; volume final
+  normalizado (alvo inicial −16 LUFS) e a narração sempre por cima dos efeitos.
+
 ## Regras factuais
 
 - Pesquisar antes de roteirizar; priorizar artigos científicos, universidades, museus, órgãos públicos e fontes

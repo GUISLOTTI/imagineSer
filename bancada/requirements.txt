@@ -6,3 +6,6 @@ imageio-ffmpeg==0.5.1
 rembg[cpu]==2.0.75
 # T6: Chrome sem janela para renderizar as cenas 3D quadro a quadro (usa o Chrome instalado; não baixa navegador)
 playwright==1.64.1
+# Síntese e mixagem dos efeitos sonoros (já vinham como dependência do rembg; agora usados direto)
+numpy==2.5.4
+scipy==1.18.1

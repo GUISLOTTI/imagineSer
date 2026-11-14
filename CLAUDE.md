@@ -39,6 +39,8 @@ Fase atual: **Semana 0 — transplante e bancada de testes**. Nenhum código de 
   Elas só escrevem arquivos; a saída é validada por schema (`schemas/`).
 - **`Factory.Cli` (.NET 10)** faz tudo que tem efeito externo: validar, produzir (imagens, voz, legendas, render,
   QA), publicar, reconciliar, contadores de uso.
+- **Formato:** animação 3D feita por código (ADR-0017), 61–90 s (ADR-0012) e som caprichado: toda ação importante
+  na tela tem um som-chave sincronizado, sobre ambiente contínuo e sem música (ADR-0018, `docs/04`).
 - **Serviços:** Cloudflare R2 (mídia), Google Cloud TTS Chirp 3 HD (voz), Buffer Free (publicação nas 3 redes).
   Visual: cena 3D por código (Three.js, render local, sem custo; ADR-0017 em teste); Workers AI Free (FLUX) só apoio.
 - **Fluxo (por estoque, ADR-0011):** roteiros semanais (Claude) → PR 1 → aprova ou nega → produzir → PR 2 →
@@ -106,9 +108,9 @@ Fase atual: **Semana 0 — transplante e bancada de testes**. Nenhum código de 
 Repositório: `github.com/GUISLOTTI/imagineSer` (privado). Estado das contas em `docs/08`.
 
 1. Formato visual = animação 3D feita por código (ADR-0017, Proposta; referências analisadas em `docs/08`).
-   Protótipo T6 "polvo" pronto no sábado 14/11 (`bancada/saida/t6/polvo.mp4`); aguardando o Gabriel ver. Depois:
-   medir o render no runner do GitHub (workflow de bancada), efeitos sonoros e legenda sincronizada pela voz.
-   T3–T5 suspensos; o T2 não precisa mais de notas.
+   Protótipo T6 "polvo" (`bancada/saida/t6/polvo.mp4`): o Gabriel viu no sábado 14/11 e mandou seguir. Trilha de
+   efeitos sintetizados pronta no mesmo dia (ADR-0018); aguardando o Gabriel ouvir. Depois: medir o render no
+   runner do GitHub (workflow de bancada) e legenda sincronizada pela voz. T3–T5 suspensos; o T2 não precisa de notas.
 2. Gabriel: conectar o YouTube ao Buffer quando o canal tiver o @ (Claude lembra).
 3. Claude: 5 vozes Chirp 3 HD para o Gabriel ouvir (aí entra o Google Cloud, com cartão).
 4. Claude: um episódio feito à mão (cena 3D + voz) com rascunhos das skills; Gabriel aprova ou nega.
