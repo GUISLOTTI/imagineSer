@@ -1,0 +1,6 @@
+nproc: 4
+CPU(s):                                  4
+Model name:                              Intel(R) Xeon(R) 6975P-C
+               total        used        free      shared  buff/cache   available
+Mem:            15Gi       959Mi        13Gi        44Mi       1.5Gi        14Gi
+Google Chrome 157.0.8103.78 

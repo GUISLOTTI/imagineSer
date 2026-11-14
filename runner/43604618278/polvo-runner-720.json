@@ -1,0 +1,27 @@
+{
+  "cena": "polvo",
+  "data_utc": "2026-11-14T14:26:15Z",
+  "resolucao": "720x1280",
+  "fps": 30,
+  "quadros": 618,
+  "duracao_video_s": 20.6,
+  "gl": "swiftshader",
+  "webgl_renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "three": "186",
+  "preparo_s": 0.9,
+  "render_s": 122.8,
+  "ms_por_quadro": 198.7,
+  "maquina": "Linux-7.0.0-1016-aws-x86_64-with-glibc2.43",
+  "arquivo": "polvo-runner-720.mp4",
+  "proveniencia": "cena procedural (código em bancada/cena3d), sem modelo generativo; Three.js MIT; fonte Lilita One OFL",
+  "avisos_navegador": [
+    "error: Failed to load resource: the server responded with a status of 404 (File not found)"
+  ],
+  "som": {
+    "eventos": 47,
+    "sons_distintos": 45,
+    "pico_antes_do_limitador": 0.439,
+    "lufs_integrado": -15.7,
+    "proveniencia": "sintetizado por bancada/som/sintese.py (sem material de terceiros)"
+  }
+}
